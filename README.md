@@ -1,3 +1,6 @@
-1. Cifar-10, Cifar-100 데이터셋으로 Classifier를 구현
-2. 다양한 Convolution Nerual Network 모델을 실험
-3. 90% 넘는 것이 목표...
+Paper Reference
+
+- Striving for Simplicity: The All Convolutional Net
+  URL : https://arxiv.org/abs/1412.6806?context=cs
+  
+-
