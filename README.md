@@ -1,0 +1,3 @@
+Cifar-10, Cifar-100 데이터셋으로 Classifier를 구현
+다양한 Convolution Nerual Network 모델을 실험
+90% 넘는 것이 목표...
