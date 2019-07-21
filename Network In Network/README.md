@@ -1,1 +1,2 @@
-Network In Network 아키텍처로 cifar-10 데이터를 실험한 모델 모음
+Network In Network 아키텍처를 구현  
+데이터는 Cifar-10
