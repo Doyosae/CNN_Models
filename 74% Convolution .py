@@ -9,7 +9,7 @@ BatchSize = 256
 
 X = tf.placeholder (tf.float32, shape = [None, 32, 32, 3])
 Y = tf.placeholder (tf.float32, shape = [None, 10])
-KeepProbDropout = tf.placeholder(tf.float32)
+keep_prob = tf.placeholder(tf.float32)
 
 Y_training_OneHotLabeling = tf.squeeze (tf.one_hot (Y_training, 10), axis = 1)
 Y_test_OneHotLabeling = tf.squeeze (tf.one_hot (Y_test, 10), axis = 1)
@@ -63,8 +63,10 @@ print (outputs)
 
 outputs = tf.contrib.layers.fully_connected (outputs, num_outputs = 2048, activation_fn=None)
 outputs = tf.nn.relu (outputs)
+outputs = tf.nn.dropout (outputs, rate = 1 - keep_prob)
 outputs = tf.contrib.layers.fully_connected (outputs, num_outputs = 1024, activation_fn=None)
 outputs = tf.nn.relu (outputs)
+outputs = tf.nn.dropout (outputs, rate = 1 - keep_prob)
 outputs = tf.contrib.layers.fully_connected (outputs, num_outputs = 10, activation_fn=None)
                                    
 # 1. Hypothesis는 Cross-Entropy-Softmax 손실도에 들어갈 것
@@ -81,8 +83,6 @@ LossTrainingStep = tf.train.RMSPropOptimizer(0.001).minimize(Lossfunction)
 # 아래 구문은 정확도를 예측
 CorrectPrediction = tf.equal (tf.argmax(Y, 1), tf.argmax(Prediction, 1))
 Accuracy = tf.reduce_mean (tf.cast (CorrectPrediction, tf.float32))
-
-
 with tf.Session () as sess :
     sess.run(tf.global_variables_initializer())
     
@@ -93,12 +93,12 @@ with tf.Session () as sess :
     for Epoch in range (5000) :
         
         batch = Next_Batch_Function (BatchSize, X_training, Y_training_OneHotLabeling.eval())
-        sess.run (LossTrainingStep, feed_dict = {X : batch[0], Y : batch[1], KeepProbDropout : 0.8})
+        sess.run (LossTrainingStep, feed_dict = {X : batch[0], Y : batch[1], keep_prob : 0.3})
 
         if Epoch % 100 == 0 :
             
-            TrainAccuracy = Accuracy.eval (feed_dict = {X : batch[0], Y : batch[1], KeepProbDropout: 1.0})
-            PrintLoss = Lossfunction.eval (feed_dict = {X : batch[0], Y : batch[1], KeepProbDropout: 1.0})
+            TrainAccuracy = Accuracy.eval (feed_dict = {X : batch[0], Y : batch[1], keep_prob: 1.0})
+            PrintLoss = Lossfunction.eval (feed_dict = {X : batch[0], Y : batch[1], keep_prob: 1.0})
 
             print("Epoch  : %d,   트레이닝 데이터 정확도 : %f,   손실도 : %f" % (Epoch, TrainAccuracy, PrintLoss))
 
@@ -108,7 +108,7 @@ with tf.Session () as sess :
     
     for i in range (10) :
         TestBatch = Next_Batch_Function(1000, X_test, Y_test_OneHotLabeling.eval())
-        TestAccuracy = TestAccuracy + Accuracy.eval (feed_dict = {X : TestBatch[0], Y : TestBatch[1], KeepProbDropout: 1.0})
+        TestAccuracy = TestAccuracy + Accuracy.eval (feed_dict = {X : TestBatch[0], Y : TestBatch[1], keep_prob: 1.0})
         
     # 테스트 데이터 10000개를 1000개 단위의 배치로 잘라서 각 배치마다의 정확도를 측정한 후, 모두 더한 다음 10으로 나누는 것
     TestAccuracy = TestAccuracy / 10
