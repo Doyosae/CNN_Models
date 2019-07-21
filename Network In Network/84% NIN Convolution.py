@@ -14,6 +14,7 @@ print ("훈련 라벨링의 크기           ", np.shape (TrainLabel_OneHotEncod
 print ("검사 이미지의 크기           ", np.shape (TestDataSet))
 print ("검사 라벨링의 크기           ", np.shape (TestLabel_OneHOtEncoding))
 
+
 # 입력으로 들어가는 데이터 세트의 크기만큼 np.arange를 이용하여 List를 생성 (Cifar-10 데이터는 50,000개 이므로 50,000 리스트 생성)
 # 이제 이 리스트의 원소들을 shuffle 해준다. 랜덤으로 정렬된 원소의 인덱스에 해당하는 데이터들을 뽑아서 ShuffleSet를 새로 생성
 def Build_NextBatch_Function (number, data, labels) :
@@ -83,6 +84,7 @@ def Build_NetworkNetwork_Function (inputs) :
 
     return Logits, Predict
 
+
 Size1 = 256
 Size2 = 128
 Size3 = 64
@@ -128,8 +130,8 @@ with tf.Session () as sess :
             trainBatch = Build_NextBatch_Function (BatchSize, TrainDataSet, TrainLabel_OneHotEncoding.eval())
             PrintLossTraining = sess.run (LossTraining, feed_dict = {X : trainBatch[0], Y : trainBatch[1], 
                                                                      keep_prob : 0.7, is_training : True})
-            PrintLossfunction = PrintLossfunction + sess.run (Lossfunction, feed_dict = {X : trainBatch[0], Y : trainBatch[1], 
-                                                                                         keep_prob : 1.0, is_training : True})
+            PrintLossfunction += sess.run (Lossfunction, feed_dict = {X : trainBatch[0], Y : trainBatch[1], 
+                                                                      keep_prob : 1.0, is_training : True})
             
         PrintLossfunction = PrintLossfunction / 390
               
