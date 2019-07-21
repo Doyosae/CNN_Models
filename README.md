@@ -1,4 +1,7 @@
-# Paper Reference
+# 이메일 (E-mail)  
+  calidris.snipe@gmail.com  
+
+# Paper Reference  
 
 - Striving for Simplicity: The All Convolutional Net (ACN)  
   URL : https://arxiv.org/abs/1412.6806?context=cs
