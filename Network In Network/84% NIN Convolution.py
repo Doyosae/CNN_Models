@@ -30,37 +30,46 @@ def Build_NextBatch_Function (number, data, labels) :
 
 def Build_NetworkNetwork_Function (inputs) :
     
-    outputs = tf.contrib.layers.conv2d (inputs, num_outputs = Size1, kernel_size = 5, stride = 1, padding = "SAME", activation_fn = None)
-    outputs = tf.contrib.layers.batch_norm(outputs)
+    outputs = tf.contrib.layers.conv2d (inputs, num_outputs = Size1, kernel_size = 5, 
+                                        stride = 1, padding = "SAME", activation_fn = None)
+    outputs = tf.contrib.layers.batch_norm(outputs, is_training = is_training)
     outputs = tf.nn.relu (outputs)
-    outputs = tf.contrib.layers.conv2d (outputs, num_outputs = Size1, kernel_size = 1, stride = 1, padding = "SAME", activation_fn = None)
-    outputs = tf.contrib.layers.batch_norm(outputs)
+    outputs = tf.contrib.layers.conv2d (outputs, num_outputs = Size1, kernel_size = 1, 
+                                        stride = 1, padding = "SAME", activation_fn = None)
+    outputs = tf.contrib.layers.batch_norm(outputs, is_training = is_training)
     outputs = tf.nn.relu (outputs)
-    outputs = tf.contrib.layers.conv2d (outputs, num_outputs = Size1, kernel_size = 1, stride = 1, padding = "SAME", activation_fn = None)
-    outputs = tf.contrib.layers.batch_norm(outputs)
-    outputs = tf.nn.relu (outputs)
-    outputs = tf.contrib.layers.max_pool2d (outputs, kernel_size = [3, 3], stride = [2, 2], padding = "SAME")
-    print (outputs)
-
-    outputs = tf.contrib.layers.conv2d (outputs, num_outputs = Size2, kernel_size = 3, stride = 1, padding = "SAME", activation_fn = None)
-    outputs = tf.contrib.layers.batch_norm(outputs)
-    outputs = tf.nn.relu (outputs)
-    outputs = tf.contrib.layers.conv2d (outputs, num_outputs = Size2, kernel_size = 1, stride = 1, padding = "SAME", activation_fn = None)
-    outputs = tf.contrib.layers.batch_norm(outputs)
-    outputs = tf.nn.relu (outputs)
-    outputs = tf.contrib.layers.conv2d (outputs, num_outputs = Size2, kernel_size = 1, stride = 1, padding = "SAME", activation_fn = None)
-    outputs = tf.contrib.layers.batch_norm(outputs)
+    outputs = tf.contrib.layers.conv2d (outputs, num_outputs = Size1, kernel_size = 1, 
+                                        stride = 1, padding = "SAME", activation_fn = None)
+    outputs = tf.contrib.layers.batch_norm(outputs, is_training = is_training)
     outputs = tf.nn.relu (outputs)
     outputs = tf.contrib.layers.max_pool2d (outputs, kernel_size = [3, 3], stride = [2, 2], padding = "SAME")
     print (outputs)
 
-    outputs = tf.contrib.layers.conv2d (outputs, num_outputs = Size3, kernel_size = 3, stride = 1, padding = "SAME", activation_fn = None)
-    outputs = tf.contrib.layers.batch_norm(outputs)
+    outputs = tf.contrib.layers.conv2d (outputs, num_outputs = Size2, kernel_size = 3,
+                                        stride = 1, padding = "SAME", activation_fn = None)
+    outputs = tf.contrib.layers.batch_norm(outputs, is_training = is_training)
     outputs = tf.nn.relu (outputs)
-    outputs = tf.contrib.layers.conv2d (outputs, num_outputs = Size3, kernel_size = 1, stride = 1, padding = "SAME", activation_fn = None)
-    outputs = tf.contrib.layers.batch_norm(outputs)
+    outputs = tf.contrib.layers.conv2d (outputs, num_outputs = Size2, kernel_size = 1, 
+                                        stride = 1, padding = "SAME", activation_fn = None)
+    outputs = tf.contrib.layers.batch_norm(outputs, is_training = is_training)
     outputs = tf.nn.relu (outputs)
-    outputs = tf.contrib.layers.conv2d (outputs, num_outputs = 10, kernel_size = 1, stride = 1, padding = "SAME", activation_fn = None)
+    outputs = tf.contrib.layers.conv2d (outputs, num_outputs = Size2, kernel_size = 1, 
+                                        stride = 1, padding = "SAME", activation_fn = None)
+    outputs = tf.contrib.layers.batch_norm(outputs, is_training = is_training)
+    outputs = tf.nn.relu (outputs)
+    outputs = tf.contrib.layers.max_pool2d (outputs, kernel_size = [3, 3], stride = [2, 2], padding = "SAME")
+    print (outputs)
+
+    outputs = tf.contrib.layers.conv2d (outputs, num_outputs = Size3, kernel_size = 3, 
+                                        stride = 1, padding = "SAME", activation_fn = None)
+    outputs = tf.contrib.layers.batch_norm(outputs, is_training = is_training)
+    outputs = tf.nn.relu (outputs)
+    outputs = tf.contrib.layers.conv2d (outputs, num_outputs = Size3, kernel_size = 1, 
+                                        stride = 1, padding = "SAME", activation_fn = None)
+    outputs = tf.contrib.layers.batch_norm(outputs, is_training = is_training)
+    outputs = tf.nn.relu (outputs)
+    outputs = tf.contrib.layers.conv2d (outputs, num_outputs = 10, kernel_size = 1, 
+                                        stride = 1, padding = "SAME", activation_fn = None)
     print (outputs)
 
 
@@ -117,8 +126,10 @@ with tf.Session () as sess :
             
             # IsTraining을 True로 켜고 진행
             trainBatch = Build_NextBatch_Function (BatchSize, TrainDataSet, TrainLabel_OneHotEncoding.eval())
-            PrintLossTraining = sess.run (LossTraining, feed_dict = {X : trainBatch[0], Y : trainBatch[1], keep_prob : 1.0, is_training : True})
-            PrintLossfunction = PrintLossfunction + sess.run (Lossfunction, feed_dict = {X : trainBatch[0], Y : trainBatch[1], keep_prob : 0.5, is_training : False})
+            PrintLossTraining = sess.run (LossTraining, feed_dict = {X : trainBatch[0], Y : trainBatch[1], 
+                                                                     keep_prob : 0.7, is_training : True})
+            PrintLossfunction = PrintLossfunction + sess.run (Lossfunction, feed_dict = {X : trainBatch[0], Y : trainBatch[1], 
+                                                                                         keep_prob : 1.0, is_training : True})
             
         PrintLossfunction = PrintLossfunction / 390
               
@@ -132,7 +143,8 @@ with tf.Session () as sess :
         for i in range (10) :
 
             testBatch = Build_NextBatch_Function (1000, TestDataSet, TestLabel_OneHOtEncoding.eval())
-            TestAccuracy = TestAccuracy + sess.run (Accuracy, feed_dict = {X : testBatch[0], Y : testBatch[1], keep_prob : 1.0, is_training : False})
+            TestAccuracy = TestAccuracy + sess.run (Accuracy, feed_dict = {X : testBatch[0], Y : testBatch[1], 
+                                                                           keep_prob : 1.0, is_training : True})
 
 
         # 테스트 데이터 10000개를 1000개 단위의 배치로 잘라서 각 배치마다의 정확도를 측정한 후, 모두 더한 다음 10으로 나누는 것
