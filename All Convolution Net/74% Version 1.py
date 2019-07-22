@@ -5,12 +5,6 @@ from tensorflow.keras.datasets.cifar10 import load_data
 
 TestData = (X_training, Y_training) ; ValidData = (X_test, Y_test)
 
-BatchSize = 256
-
-X = tf.placeholder (tf.float32, shape = [None, 32, 32, 3])
-Y = tf.placeholder (tf.float32, shape = [None, 10])
-keep_prob = tf.placeholder(tf.float32)
-
 Y_training_OneHotLabeling = tf.squeeze (tf.one_hot (Y_training, 10), axis = 1)
 Y_test_OneHotLabeling = tf.squeeze (tf.one_hot (Y_test, 10), axis = 1)
 
@@ -43,6 +37,12 @@ def Next_Batch_Function (number, data, labels) :
 2. MNIST 이미지에서는 채널 한 개에서 모델을 설계한 것과 차이가 있음
 """
 
+BatchSize = 256
+X = tf.placeholder (tf.float32, shape = [None, 32, 32, 3])
+Y = tf.placeholder (tf.float32, shape = [None, 10])
+keep_prob = tf.placeholder(tf.float32)
+
+
 outputs = tf.contrib.layers.conv2d (X, num_outputs = 96, kernel_size = 3, stride = 1, padding = "SAME", activation_fn=None)
 outputs = tf.nn.relu (outputs)
 outputs = tf.contrib.layers.conv2d (outputs, num_outputs = 96, kernel_size = 3, stride = 1, padding = "SAME", activation_fn=None)
@@ -68,7 +68,8 @@ outputs = tf.contrib.layers.fully_connected (outputs, num_outputs = 1024, activa
 outputs = tf.nn.relu (outputs)
 outputs = tf.nn.dropout (outputs, rate = 1 - keep_prob)
 outputs = tf.contrib.layers.fully_connected (outputs, num_outputs = 10, activation_fn=None)
-                                   
+                 
+    
 # 1. Hypothesis는 Cross-Entropy-Softmax 손실도에 들어갈 것
 # 2. CorrectPrediction에 들어가서 정확도를 예측하는데에 쓰일 것
 Hypothesis = outputs
