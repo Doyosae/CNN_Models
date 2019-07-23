@@ -30,45 +30,45 @@ def Build_NextBatch_Function (number, data, labels) :
     return np.asarray(DataShuffle), np.asarray(LabelsShuffle)
 
 
-def Build_NetworkNetwork_Function (inputs) :
+def Build_NetworkNetwork_Function (inputs, phase) :
     
     outputs = tf.contrib.layers.conv2d (inputs, num_outputs = Size1, kernel_size = 5, 
                                         stride = 1, padding = "SAME", activation_fn = None)
-    outputs = tf.contrib.layers.batch_norm(outputs, is_training = is_training)
+    outputs = tf.contrib.layers.batch_norm(outputs, updates_collections = None, is_training = phase)
     outputs = tf.nn.relu (outputs)
     outputs = tf.contrib.layers.conv2d (outputs, num_outputs = Size1, kernel_size = 1, 
                                         stride = 1, padding = "SAME", activation_fn = None)
-    outputs = tf.contrib.layers.batch_norm(outputs, is_training = is_training)
+    outputs = tf.contrib.layers.batch_norm(outputs, updates_collections = None, is_training = phase)
     outputs = tf.nn.relu (outputs)
     outputs = tf.contrib.layers.conv2d (outputs, num_outputs = Size1, kernel_size = 1, 
                                         stride = 1, padding = "SAME", activation_fn = None)
-    outputs = tf.contrib.layers.batch_norm(outputs, is_training = is_training)
+    outputs = tf.contrib.layers.batch_norm(outputs, updates_collections = None, is_training = phase)
     outputs = tf.nn.relu (outputs)
     outputs = tf.contrib.layers.max_pool2d (outputs, kernel_size = [3, 3], stride = [2, 2], padding = "SAME")
     print (outputs)
 
     outputs = tf.contrib.layers.conv2d (outputs, num_outputs = Size2, kernel_size = 3,
                                         stride = 1, padding = "SAME", activation_fn = None)
-    outputs = tf.contrib.layers.batch_norm(outputs, is_training = is_training)
+    outputs = tf.contrib.layers.batch_norm(outputs, updates_collections = None, is_training = phase)
     outputs = tf.nn.relu (outputs)
     outputs = tf.contrib.layers.conv2d (outputs, num_outputs = Size2, kernel_size = 1, 
                                         stride = 1, padding = "SAME", activation_fn = None)
-    outputs = tf.contrib.layers.batch_norm(outputs, is_training = is_training)
+    outputs = tf.contrib.layers.batch_norm(outputs, updates_collections = None, is_training = phase)
     outputs = tf.nn.relu (outputs)
     outputs = tf.contrib.layers.conv2d (outputs, num_outputs = Size2, kernel_size = 1, 
                                         stride = 1, padding = "SAME", activation_fn = None)
-    outputs = tf.contrib.layers.batch_norm(outputs, is_training = is_training)
+    outputs = tf.contrib.layers.batch_norm(outputs, updates_collections = None, is_training = phase)
     outputs = tf.nn.relu (outputs)
     outputs = tf.contrib.layers.max_pool2d (outputs, kernel_size = [3, 3], stride = [2, 2], padding = "SAME")
     print (outputs)
 
     outputs = tf.contrib.layers.conv2d (outputs, num_outputs = Size3, kernel_size = 3, 
                                         stride = 1, padding = "SAME", activation_fn = None)
-    outputs = tf.contrib.layers.batch_norm(outputs, is_training = is_training)
+    outputs = tf.contrib.layers.batch_norm(outputs, updates_collections = None, is_training = phase)
     outputs = tf.nn.relu (outputs)
     outputs = tf.contrib.layers.conv2d (outputs, num_outputs = Size3, kernel_size = 1, 
                                         stride = 1, padding = "SAME", activation_fn = None)
-    outputs = tf.contrib.layers.batch_norm(outputs, is_training = is_training)
+    outputs = tf.contrib.layers.batch_norm(outputs, updates_collections = None, is_training = phase)
     outputs = tf.nn.relu (outputs)
     outputs = tf.contrib.layers.conv2d (outputs, num_outputs = 10, kernel_size = 1, 
                                         stride = 1, padding = "SAME", activation_fn = None)
@@ -98,16 +98,14 @@ Epochs = 20
 BatchSize = 128
 LearningRate = 0.001
 
-X = tf.placeholder (tf.float32, shape = [None, 32, 32, 3])
-Y = tf.placeholder (tf.float32, shape = [None, 10])
-
 # bool 자료형은 True, False을 반환하는 1비트 자료형
 # 배치 정규화 과정에서 트레이닝 시에 배치 정규화를 하는지 안하는지 여부에 관여할 때 쓰인다.
-# bool형 자료형을 is_training의 feed_dict 인자로 전달한 후 True를 
-keep_prob = tf.placeholder(tf.float32)
-is_training = tf.placeholder(tf.bool)
+# bool형 자료형을 is_training의 feed_dict 인자로 전달한 후 True를vvvvvvvvvvvvv
+X = tf.placeholder (tf.float32, shape = [None, 32, 32, 3])
+Y = tf.placeholder (tf.float32, shape = [None, 10]) 
+phase = tf.placeholder(tf.bool)
 
-Logits, Predict = Build_NetworkNetwork_Function (X)
+Logits, Predict = Build_NetworkNetwork_Function (X, phase)
 
 # 1. 손실도를 계산하고 그것을 최소화하는 학습을 진행할 것
 Lossfunction = tf.reduce_mean (tf.nn.softmax_cross_entropy_with_logits_v2 (labels = Y, logits = Logits))
@@ -135,9 +133,9 @@ with tf.Session () as sess :
             # IsTraining의 bool 자료형을 True 값으로 전달한다.
             trainBatch = Build_NextBatch_Function (BatchSize, TrainDataSet, TrainLabel_OneHotEncoding.eval())
             PrintLossTraining = sess.run (LossTraining, feed_dict = {X : trainBatch[0], Y : trainBatch[1], 
-                                                                     keep_prob : 0.7, is_training : True})
+                                                                     phase : True})
             PrintLossfunction += sess.run (Lossfunction, feed_dict = {X : trainBatch[0], Y : trainBatch[1], 
-                                                                      keep_prob : 1.0, is_training : True})
+                                                                     phase : True})
             
         PrintLossfunction = PrintLossfunction / 390
         print ("손실도   %f" %PrintLossfunction)
@@ -149,7 +147,7 @@ with tf.Session () as sess :
         for i in range (10) :
             testBatch = Build_NextBatch_Function (1000, TestDataSet, TestLabel_OneHOtEncoding.eval())
             TestAccuracy = TestAccuracy + sess.run (Accuracy, feed_dict = {X : testBatch[0], Y : testBatch[1], 
-                                                                           keep_prob : 1.0, is_training : True})
+                                                                          phase : False})
 
         # 테스트 데이터 10,000개를 1,000개 단위의 배치로 잘라서 각 배치의 Acc를 계산한다.
         # 10개의 Acc를 모두 더한 후, 10으로 나눈 Avg Acc를 Epoch 당 테스트 정확도로 간주한다.
