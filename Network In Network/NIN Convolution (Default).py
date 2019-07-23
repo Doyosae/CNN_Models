@@ -90,17 +90,14 @@ def Build_NetworkNetwork_Function (inputs, phase) :
 Size1 = 256
 Size2 = 128
 Size3 = 64
-Size4 = 64
-Size5 = 32
-Size6 = 10
 
-Epochs = 20
+Epochs = 50
 BatchSize = 128
 LearningRate = 0.001
 
 # bool 자료형은 True, False을 반환하는 1비트 자료형
-# 배치 정규화 과정에서 트레이닝 시에 배치 정규화를 하는지 안하는지 여부에 관여할 때 쓰인다.
-# bool형 자료형을 is_training의 feed_dict 인자로 전달한 후 True를vvvvvvvvvvvvv
+# 배치 정규화 과정에서 트레이닝, 테스트 각각의 경우에 배치 정규화를 하는지 안하는지 여부에 관여할 때 쓰인다.
+# bool형 자료형을 is_training의 feed_dict 인자로 전달한 후 True를 준다. 테스트 시에는 False를 준다.
 X = tf.placeholder (tf.float32, shape = [None, 32, 32, 3])
 Y = tf.placeholder (tf.float32, shape = [None, 10]) 
 phase = tf.placeholder(tf.bool)
