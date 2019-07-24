@@ -90,6 +90,7 @@ ResNetLayer_96 = Define_ResNet_Class (3, 96)
 ResNetLayer_128 = Define_ResNet_Class (3, 128)
 ResNetLayer_256 = Define_ResNet_Class (3, 256)
 
+# Build Model
 # ResNet Class No 1.
 # 필터 64개를 가지는 ResNet 모듈
 outputs1 = ResNetLayer_64.Build_BackBoneNetwork_Fucntion (Input_Layer, phase)
@@ -125,6 +126,7 @@ Logits = outputs
 Predict = tf.nn.softmax (outputs)
 print (Logits)
 print (Predict)
+
 
 # 1. 손실도를 계산하고 그것을 최소화하는 학습을 진행할 것
 Lossfunction = tf.reduce_mean (tf.nn.softmax_cross_entropy_with_logits_v2 (labels = Label_Layer, logits = Logits))
