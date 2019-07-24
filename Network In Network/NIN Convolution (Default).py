@@ -102,6 +102,7 @@ X = tf.placeholder (tf.float32, shape = [None, 32, 32, 3])
 Y = tf.placeholder (tf.float32, shape = [None, 10]) 
 phase = tf.placeholder(tf.bool)
 
+# Build Model
 Logits, Predict = Build_NetworkNetwork_Function (X, phase)
 
 # 1. 손실도를 계산하고 그것을 최소화하는 학습을 진행할 것
