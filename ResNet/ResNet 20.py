@@ -11,9 +11,8 @@ print ("훈련 라벨링의 크기           ", np.shape (Train_Labeling))
 print ("검사 이미지의 크기           ", np.shape (TestDataSet))
 print ("검사 라벨링의 크기           ", np.shape (Test_Labeling))
 
-"""Model Architecture"""
 
-# Build Layer 1
+# 첫 번째 레이어 함수, 단순한 Convolution 신경망
 def Build_Convolution_Layer_1 (inputs):
     
     outputs = tf.contrib.layers.conv2d(
@@ -29,7 +28,7 @@ def Build_Convolution_Layer_1 (inputs):
                                     updates_collections = None, 
                                     is_training = phase)
     outputs = tf.nn.relu (outputs)
-    print ("Depth : 1, Convolution output size :   " %outputs)
+    print ("Convolution output size :   " %outputs)
     
     outputs = tf.contrib.layers.conv2d(
                                     outputs,
@@ -44,12 +43,14 @@ def Build_Convolution_Layer_1 (inputs):
                                     updates_collections = None, 
                                     is_training = phase)
     outputs = tf.nn.relu (outputs)
-    print ("Depth : 2, Convolution output size :   " %outputs)
+    print ("Convolution output size :   " %outputs)
     
     return outputs
 
 
-# Build Layer 2
+# 두 번째 레이어 함수, Backbone 신경망과 Residual 신경망을 계산하는 함수를 다시 만들고
+# 이 둘의 리턴값들을 더한다. Skip Connection을 구현
+# for 문을 돌려서 반복 계산
 def Build_convolution_Layer_2 (inputs):
 
     def Build_BackBoneNetwork_Fucntion (inputs):
@@ -103,6 +104,8 @@ def Build_convolution_Layer_2 (inputs):
         return outputs
     
     
+    # index가 0이면 입력받는 inputs으로 계산하고
+    # index가 1보다 크면 반복 사용이 되므로, 리턴값을 다시 넣느낟.
     for index in range (2):
         
         if (index == 0):
@@ -122,7 +125,7 @@ def Build_convolution_Layer_2 (inputs):
             
     return ResultSum
 
-# Build Layer 3
+# 세 번째 레이어 함수
 def Build_convolution_Layer_3 (inputs):
 
     def Build_BackBoneNetwork_Fucntion (inputs):
@@ -195,7 +198,7 @@ def Build_convolution_Layer_3 (inputs):
             
     return ResultSum
 
-# Build Layer 4
+# 네 번쨰 레이어 함수
 def Build_convolution_Layer_4 (inputs):
 
     def Build_BackBoneNetwork_Fucntion (inputs):
@@ -268,7 +271,7 @@ def Build_convolution_Layer_4 (inputs):
             
     return ResultSum
 
-# Build Layer 5
+# 다섯 번째 레이어 함수
 def Build_convolution_Layer_5 (inputs):
 
     def Build_BackBoneNetwork_Fucntion (inputs):
@@ -388,20 +391,18 @@ Label_Layer = tf.placeholder (tf.float32, shape = [None, 10])
 phase = tf.placeholder(tf.bool)
 
 # Model Graph
-outputs = Build_Convolution_Layer_1 (Input_Layer)
+outputs = Build_Convolution_Layer_1 (Input_Layer) # 1
 
-outputs = Build_convolution_Layer_2 (outputs)
+outputs = Build_convolution_Layer_2 (outputs) # 4
+outputs = Build_convolution_Layer_3 (outputs) # 4
+outputs = Build_MaxPooling_Function (outputs) # 1
 
-outputs = Build_convolution_Layer_3 (outputs)
-outputs = Build_MaxPooling_Function (outputs)
-
-outputs = Build_convolution_Layer_4 (outputs)
-
-outputs = Build_convolution_Layer_5 (outputs)
-outputs = Build_MaxPooling_Function (outputs)
+outputs = Build_convolution_Layer_4 (outputs) # 4
+outputs = Build_convolution_Layer_5 (outputs) # 4
+outputs = Build_MaxPooling_Function (outputs) # 1
 
 # 마지막 Fully Connectec Network 모듈을 호출
-outputs = Build_FullyConnectedNetwork_Function (outputs)
+outputs = Build_FullyConnectedNetwork_Function (outputs) # 1
 Logits = outputs
 Predict = tf.nn.softmax (outputs)
 
@@ -441,7 +442,6 @@ with tf.Session () as sess:
             LossValue = LossValue + sess.run (Lossfunction, feed_dict = {Input_Layer : trainBatch[0], 
                                                                          Label_Layer : trainBatch[1], 
                                                                          phase : True})
-            
             
         LossValue = LossValue / 390
         LossValueList.append (LossValue)
