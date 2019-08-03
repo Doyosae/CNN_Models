@@ -12,5 +12,5 @@ Ver 1과의 가장 큰 차이는 스킵 커넥션 모듈마다의 Backbone Layer
 # Accuracy Summary  
 - Ver 1  
 100 Epoch에서 안정적으로 76 ~ 78% 정확도에 도달  
-- Ver 2
+- Ver 2  
 50 Epoch에서 안정적으로 82 ~ 84% 정확도에 도달  
