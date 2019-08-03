@@ -7,7 +7,8 @@ Residual Network 모델을 구현합니다. 성능 검증으로 활용한 데이
 # Model Architecture  
 
 - series 1  
-Backbone Layer는 2개의 Convolution, Residual Layer는 1개의 Convoluion으로 Skip Connection을 이룹니다.  
+Backbone Layer는 2개의 Convolution,  
+Residual Layer는 1개의 Convoluion으로 Skip Connection을 이룹니다.  
 각각의 스킵 커넥션 모듈은 2번씩 활용됩니다. 이 모듈들은 총 4종류가 있습니다.  
 모듈들의 차이는 필터수의 차이입니다. 32, 64, 128, 256개의 필터들을 가지고,  
 스킵 커넥션으로 들어가기 전에 처음 두 번은 일반적인 Convolution 연산을 수행합니다.  
@@ -18,8 +19,8 @@ series 1과의 가장 큰 차이는 스킵 커넥션 모듈마다의 Backbone La
 두 번째 Convolution의 필터 수가 배로 늘어나게 바꾼 것입니다.  
 마지막 스킵 커넥션에서는 필터 갯수의 차원을 10개로 줄이고,  
 Avg Pooling을 수행하여 (8, 8, 10) -> (1, 10) 로 바꾸었습니다.  
-하나 더 사소한 변화로는 스킵 커넥션 연산으로 들어가기 전의
-  두 개의 Normal Convolution 층을 하나로 줄였습니다.  
+하나 더 사소한 변화로는 스킵 커넥션 연산으로 들어가기 전의  
+두 개의 Normal Convolution 층을 하나로 줄였습니다.  
   
 - series 3  
 series 1, 2와 가장 큰 차이는 Optimizer 함수를 RMSprop에서 AdamOptimizer로 바꾼 것입니다.  
