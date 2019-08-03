@@ -23,11 +23,11 @@ Avg Pooling을 수행하여 (8, 8, 10) -> (1, 10) 로 바꾸었습니다.
   
 - series 3  
 series 1, 2와 가장 큰 차이는 Optimizer 함수를 RMSprop에서 AdamOptimizer로 바꾼 것입니다.  
-Epoch에 따른 학습률도 달리 적용하였습니다.  
-사전 실험을 통하여 얻은 결과로 30 Epoch까지는 Lr = 0.001, 30 Epoch 이후부터는 Lr = 0.0001로 하였습니다.  
-구조적 차이도 커졌습니다.  
-기존의 ResNet에서 보였던 스킵 커넥션의 Residual Network를 더 추가하여 Backbone Network에 교차하며 연결하였습니다.  
-DenseNet하고의 모양이 비슷하지만, 한 Residual Network가 다른 Residual Network를 포함하지는 않습니다.  
+Epoch에 따른 학습률도 달리 적용하였습니다. 사전 실험을 통하여 얻은 결과로  
+30 Epoch까지는 Lr = 0.001, 30 Epoch 이후부터는 Lr = 0.0001로 하였습니다.  
+구조적 차이도 커졌습니다. 기존의 ResNet에서 보였던 스킵 커넥션의 Residual Network를  
+더 추가하여 Backbone Network에 교차하며 연결하였습니다. DenseNet하고의 모양이 비슷하지만,  
+한 Residual Network가 다른 Residual Network를 포함하지는 않습니다.  
 series 3에서는 Backbone Net에 대하여 체인 형태로 Residual Net이 동작합니다.
   
   
