@@ -364,7 +364,6 @@ outputs = Build_MaxPooling_Function (outputs) # 1
 
 # 마지막 outputs는 Average Pooling 기법으로 차원수를 도리어 줄인다.
 outputs = tf.reduce_mean(outputs, axis = [1, 2])
-output = tf.reshape (outputs, [-1, 10])
 print ("After Avg_Pooling Size is... ... ", outputs)
 
 
