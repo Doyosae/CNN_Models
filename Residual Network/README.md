@@ -32,8 +32,8 @@ series 3에서는 Backbone Net에 대하여 체인 형태로 Residual Net이 동
 - series 1  
   100 Epoch에서 안정적으로 76 ~ 78% 정확도에 도달  
 - series 1.1  
-  1. RMSprop에서 AdamOptimizer  
-  2. Epoch < 100에서 lr = 0.001, Epoch >= 100에서 lr = 0.0005, 137 Epoch부터 85 ~ 86%의 Accuracy를 안정적으로 보임
+  RMSprop에서 AdamOptimizer  
+  Epoch < 100에서 lr = 0.001, Epoch >= 100에서 lr = 0.0005, 137 Epoch부터 85 ~ 86%의 
 - series 2  
   50 Epoch에서 안정적으로 82 ~ 84% 정확도에 도달  
 - series 3  
