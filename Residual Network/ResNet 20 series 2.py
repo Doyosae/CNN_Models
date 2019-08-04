@@ -372,7 +372,9 @@ Predict = tf.nn.softmax (outputs)
 
 # 1. 손실도를 계산하고 그것을 최소화하는 학습을 진행할 것
 Lossfunction = tf.reduce_mean (tf.nn.softmax_cross_entropy_with_logits_v2 (labels = Label_Layer, logits = Logits))
-LossTraining = tf.train.RMSPropOptimizer(LearningRate, decay = 0.9, momentum = 0.9).minimize(Lossfunction)
+LossTraining1 = tf.train.AdamOptimizer(LearningRate).minimize(Lossfunction)
+LossTraining2 = tf.train.AdamOptimizer(LearningRate*0.5).minimize(Lossfunction)
+LossTraining3 = tf.train.AdamOptimizer(LearningRate*0.2).minimize(Lossfunction)
 
     
 # 2. CorrectPrediction에 들어가서 정확도를 예측하는데에 쓰일 것
@@ -391,26 +393,51 @@ with tf.Session () as sess:
     print ("----------------------------------------")
     
     # Epochs Step만큼 기계 학습을 시작
-    for Epoch in range (Epochs + 170):
+    for Epoch in range (150):
         
-        print ("- Epoch is... ... %d회" %Epoch)
+        print ("- Epoch :   %d회" %Epoch)
         LossValue = 0.000
 
+        if Epoch <= 30:
         
-        for i in range (390):
+            for i in range (390):
+
+                trainBatch = Build_NextBatch_Function (BatchSize, TrainDataSet, Train_Labeling.eval())
+                sess.run (LossTraining1, feed_dict = {Input_Layer : trainBatch[0], 
+                                                     Label_Layer : trainBatch[1], 
+                                                     phase : True})
+                LossValue = LossValue + sess.run (Lossfunction, feed_dict = {Input_Layer : trainBatch[0], 
+                                                                             Label_Layer : trainBatch[1], 
+                                                                             phase : True})
+
+        elif Epoch > 30 and Epoch < 90:
             
-            trainBatch = Build_NextBatch_Function (BatchSize, TrainDataSet, Train_Labeling.eval())
-            sess.run (LossTraining, feed_dict = {Input_Layer : trainBatch[0], 
-                                                 Label_Layer : trainBatch[1], 
-                                                 phase : True})
-            LossValue = LossValue + sess.run (Lossfunction, feed_dict = {Input_Layer : trainBatch[0], 
-                                                                         Label_Layer : trainBatch[1], 
-                                                                         phase : True})
+            for i in range (390):
+
+                trainBatch = Build_NextBatch_Function (BatchSize, TrainDataSet, Train_Labeling.eval())
+                sess.run (LossTraining2, feed_dict = {Input_Layer : trainBatch[0], 
+                                                     Label_Layer : trainBatch[1], 
+                                                     phase : True})
+                LossValue = LossValue + sess.run (Lossfunction, feed_dict = {Input_Layer : trainBatch[0], 
+                                                                             Label_Layer : trainBatch[1], 
+                                                                             phase : True})
+                
+        else:
+            
+            for i in range (390):
+
+                trainBatch = Build_NextBatch_Function (BatchSize, TrainDataSet, Train_Labeling.eval())
+                sess.run (LossTraining3, feed_dict = {Input_Layer : trainBatch[0], 
+                                                     Label_Layer : trainBatch[1], 
+                                                     phase : True})
+                LossValue = LossValue + sess.run (Lossfunction, feed_dict = {Input_Layer : trainBatch[0], 
+                                                                             Label_Layer : trainBatch[1], 
+                                                                             phase : True})
             
             
         LossValue = LossValue / 390
-        LossValueList.append (LossValue)
-        print ("손실도는 대략... %f" %LossValue)
+        LossList.append (LossValue)
+        print ("   손실도는 :            %f" %LossValue)
             
 
         # 한 번 Epoch가 끝날 때마다 학습이 끝나면 테스트 데이터(10000개)에 대한 정확도를 출력
@@ -427,4 +454,4 @@ with tf.Session () as sess:
         # 10개의 Acc를 모두 더한 후, 10으로 나눈 Avg Acc를 Epoch 당 테스트 정확도로 간주한다.
         TestAccuracy = TestAccuracy / 10
         AccuracyList.append (TestAccuracy)
-        print("테스트 데이터 정확도: %.4f" %TestAccuracy)
+        print("   테스트 데이터 정확도:   %.4f" %TestAccuracy)
