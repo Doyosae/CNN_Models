@@ -14,3 +14,6 @@
   
 - Going deeper with convolutions (GoogLeNet)  
   URL : https://arxiv.org/abs/1409.4842  
+
+- Rethinking the Inception Architecture for Computer Vision (Inception v2)
+  URL : https://arxiv.org/abs/1512.00567  
