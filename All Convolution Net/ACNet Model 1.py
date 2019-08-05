@@ -1,26 +1,24 @@
 import tensorflow as tf
 import numpy as np
 from tensorflow.keras.datasets.cifar10 import load_data
-(X_training, Y_training), (X_test, Y_test) = load_data ()
+(TrainDataSet, TrainLabelSet), (TestDataSet, TestLabelSet) = load_data ()
 
-TestData = (X_training, Y_training) ; ValidData = (X_test, Y_test)
+Train_Labeling = tf.squeeze (tf.one_hot (TrainLabelSet, 10), axis = 1)
+Test_Labeling  = tf.squeeze (tf.one_hot (TestLabelSet, 10), axis = 1)
 
-Y_training_OneHotLabeling = tf.squeeze (tf.one_hot (Y_training, 10), axis = 1)
-Y_test_OneHotLabeling = tf.squeeze (tf.one_hot (Y_test, 10), axis = 1)
+print ("훈련 이미지의 크기           ", np.shape (TrainDataSet))
+print ("훈련 라벨링의 크기           ", np.shape (Train_Labeling))
+print ("검사 이미지의 크기           ", np.shape (TestDataSet))
+print ("검사 라벨링의 크기           ", np.shape (Test_Labeling))
 
-print (np.shape (Y_training))
-print (np.shape (Y_test))
-
-ImageConvolution = X
-
-def Next_Batch_Function (number, data, labels) :
+# 1. 입력으로 들어가는 데이터 세트의 크기만큼 np.arange를 이용하여 List를 생성 (Cifar-10 데이터는 50,000개 이므로 50,000 리스트 생성)
+# 2. 이제 이 리스트의 원소들을 shuffle 해준다. 랜덤으로 정렬된 원소의 인덱스에 해당하는 데이터들을 뽑아서 ShuffleSet를 새로 만든다.
+def Next_Batch_Function (number, data, labels):
+    
     DataRange = np.arange(0 , len(data))
     np.random.shuffle(DataRange)
+    
     DataRange = DataRange[ : number]
-    
-    # 1. 입력으로 들어가는 데이터 세트의 크기만큼 np.arange를 이용하여 List를 생성 (Cifar-10 데이터는 50,000개 이므로 50,000 리스트 생성)
-    # 2. 이제 이 리스트의 원소들을 shuffle 해준다. 랜덤으로 정렬된 원소의 인덱스에 해당하는 데이터들을 뽑아서 ShuffleSet를 새로 만든다.
-    
     DataShuffle = [data[i] for i in DataRange]
     LabelsShuffle = [labels[i] for i in DataRange]
 
@@ -38,6 +36,7 @@ def Next_Batch_Function (number, data, labels) :
 """
 
 BatchSize = 256
+
 X = tf.placeholder (tf.float32, shape = [None, 32, 32, 3])
 Y = tf.placeholder (tf.float32, shape = [None, 10])
 keep_prob = tf.placeholder(tf.float32)
@@ -84,33 +83,37 @@ LossTrainingStep = tf.train.RMSPropOptimizer(0.001).minimize(Lossfunction)
 # 아래 구문은 정확도를 예측
 CorrectPrediction = tf.equal (tf.argmax(Y, 1), tf.argmax(Prediction, 1))
 Accuracy = tf.reduce_mean (tf.cast (CorrectPrediction, tf.float32))
-with tf.Session () as sess :
+
+with tf.Session () as sess:
     sess.run(tf.global_variables_initializer())
     
-    print ("학습 시작...")
-    print (".........")
+    print ("----------------------------------------")
+    print ("텐서플로우 세션을 열어서 학습을 시작합니다.")
+    print ("----------------------------------------")
     
     # Sessrion 4. range의 범위만큼 Epoch를 수행
-    for Epoch in range (5000) :
+    for Epoch in range (5000):
         
-        batch = Next_Batch_Function (BatchSize, X_training, Y_training_OneHotLabeling.eval())
+        batch = Next_Batch_Function (BatchSize, TrainDataSet, Train_Labeling.eval())
         sess.run (LossTrainingStep, feed_dict = {X : batch[0], Y : batch[1], keep_prob : 0.3})
 
-        if Epoch % 100 == 0 :
+        if Epoch % 100 == 0:
             
             TrainAccuracy = Accuracy.eval (feed_dict = {X : batch[0], Y : batch[1], keep_prob: 1.0})
             PrintLoss = Lossfunction.eval (feed_dict = {X : batch[0], Y : batch[1], keep_prob: 1.0})
-
             print("Epoch  : %d,   트레이닝 데이터 정확도 : %f,   손실도 : %f" % (Epoch, TrainAccuracy, PrintLoss))
-
             
-    # Last Session. 학습이 모두 끝나고 테스트 데이터를 넣어서 그 정확도를 출력
-    TestAccuracy = 0.000
-    
-    for i in range (10) :
-        TestBatch = Next_Batch_Function(1000, X_test, Y_test_OneHotLabeling.eval())
-        TestAccuracy = TestAccuracy + Accuracy.eval (feed_dict = {X : TestBatch[0], Y : TestBatch[1], keep_prob: 1.0})
-        
-    # 테스트 데이터 10000개를 1000개 단위의 배치로 잘라서 각 배치마다의 정확도를 측정한 후, 모두 더한 다음 10으로 나누는 것
-    TestAccuracy = TestAccuracy / 10
-    print("테스트 데이터 정확도: %f" % TestAccuracy)
+            
+        # 학습하지 않은 테스트 이미지로 학습한 모델에 대해서 그 정확도를 계산한다.
+        # 테스트 이미지는 총 10,000 장이다. 1,000장 단위로 배치를 만들고 총 10번 반복하여 테스트한다.
+        # 각 배치마다의 Accuracy를 모두 더한 후, (Summation n=10) 다시 10으로 나누어서 Acc의 평균값을 구한다
+        TestAccuracy = 0.000
+
+        for i in range (10) :
+            TestBatch = Next_Batch_Function(1000, TestDataSet, Test_Labeling.eval())
+            TestAccuracy = TestAccuracy + Accuracy.eval (feed_dict = {X : TestBatch[0], Y : TestBatch[1], keep_prob: 1.0})
+
+        # 테스트 데이터 10,000개를 1,000개 단위의 배치로 잘라서 각 배치의 Acc를 계산한다.
+        # 10개의 Acc를 모두 더한 후, 10으로 나눈 Avg Acc를 Epoch 당 테스트 정확도로 간주한다.
+        TestAccuracy = TestAccuracy / 10
+        print("테스트 데이터 정확도: %f" % TestAccuracy)
