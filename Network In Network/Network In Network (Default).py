@@ -1,23 +1,15 @@
 import tensorflow as tf
 import numpy as np
 from tensorflow.keras.datasets.cifar10 import load_data
-(TrainDataSet, TrainLabelSet), (TestDataSet, TestLabelSet) = load_data ()
-    
-TestData = (TrainDataSet, TrainLabelSet)
-ValidData = (TestDataSet, TestLabelSet)
 
-TrainLabel_OneHotEncoding = tf.squeeze (tf.one_hot (TrainLabelSet, 10), axis = 1)
-TestLabel_OneHOtEncoding = tf.squeeze (tf.one_hot (TestLabelSet, 10), axis = 1)
+# load_data로부터 cifar10의 훈련, 검증 데이터셋을 분리
+(TrainData, TrainLabel), (TestData, TestLabel) = load_data ()
 
-print ("훈련 이미지의 크기           ", np.shape (TrainDataSet))
-print ("훈련 라벨링의 크기           ", np.shape (TrainLabel_OneHotEncoding))
-print ("검사 이미지의 크기           ", np.shape (TestDataSet))
-print ("검사 라벨링의 크기           ", np.shape (TestLabel_OneHOtEncoding))
+# 라벨 데이터셋을 One-Hot 인코딩 처리
+SqueezedTrainLabel = tf.squeeze (tf.one_hot (TrainLabel, 10), axis = 1)
+SqueezedTestLabel  = tf.squeeze (tf.one_hot (TestLabel, 10),  axis = 1)
 
-
-# Session 1. 필요한 함수를 정의한다. 배치 셔플 함수, 신경망 함수
-# 입력으로 들어가는 데이터 세트의 크기만큼 np.arange를 이용하여 List를 생성 (Cifar-10 데이터는 50,000개 이므로 50,000 리스트 생성)
-# 이제 이 리스트의 원소들을 shuffle 해준다. 랜덤으로 정렬된 원소의 인덱스에 해당하는 데이터들을 뽑아서 ShuffleSet를 새로 생성
+# 데이터셋으로 부터 배치를 만드는 함수
 def Build_NextBatch_Function (number, data, labels) :
     
     DataRange = np.arange (0 , len(data))
@@ -129,11 +121,11 @@ with tf.Session () as sess :
         
         for i in range (390) :
             # IsTraining의 bool 자료형을 True 값으로 전달한다.
-            trainBatch = Build_NextBatch_Function (BatchSize, TrainDataSet, TrainLabel_OneHotEncoding.eval())
+            trainBatch = Build_NextBatch_Function (BatchSize, TrainData, SqueezedTrainLabel.eval())
             PrintLossTraining = sess.run (LossTraining, feed_dict = {X : trainBatch[0], Y : trainBatch[1], 
                                                                      phase : True})
             PrintLossfunction += sess.run (Lossfunction, feed_dict = {X : trainBatch[0], Y : trainBatch[1], 
-                                                                     phase : True})
+                                                                      phase : True})
             
         PrintLossfunction = PrintLossfunction / 390
         print ("손실도   %f" %PrintLossfunction)
@@ -143,9 +135,9 @@ with tf.Session () as sess :
         TestAccuracy = 0.000
 
         for i in range (10) :
-            testBatch = Build_NextBatch_Function (1000, TestDataSet, TestLabel_OneHOtEncoding.eval())
+            testBatch = Build_NextBatch_Function (1000, TestData, SqueezedTestLabel.eval())
             TestAccuracy = TestAccuracy + sess.run (Accuracy, feed_dict = {X : testBatch[0], Y : testBatch[1], 
-                                                                          phase : False})
+                                                                           phase : False})
 
         # 테스트 데이터 10,000개를 1,000개 단위의 배치로 잘라서 각 배치의 Acc를 계산한다.
         # 10개의 Acc를 모두 더한 후, 10으로 나눈 Avg Acc를 Epoch 당 테스트 정확도로 간주한다.
