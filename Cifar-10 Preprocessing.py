@@ -3,16 +3,11 @@ import numpy as np
 from tensorflow.keras.datasets.cifar10 import load_data
 (TrainDataSet, TrainLabelSet), (TestDataSet, TestLabelSet) = load_data ()
     
-TestData = (TrainDataSet, TrainLabelSet)
-ValidData = (TestDataSet, TestLabelSet)
+TrainData = (TrainDataSet, TrainLabelSet)
+TestData = (TestDataSet, TestLabelSet)
 
-TrainLabel_OneHotEncoding = tf.squeeze (tf.one_hot (TrainLabelSet, 10), axis = 1)
-TestLabel_OneHOtEncoding = tf.squeeze (tf.one_hot (TestLabelSet, 10), axis = 1)
-
-print ("Train Label Set의 크기           ", np.shape (TrainLabelSet))
-print ("Valid Label Set의 크기           ", np.shape (TestLabelSet))
-print ("원 핫 인코딩을 한 라벨세트의 크기     ", np.shape (TrainLabel_OneHotEncoding))
-print ("원 핫 인코딩을 한 라벨세트의 크기     ", np.shape (TestLabel_OneHOtEncoding))
+SqueezedTrainLabel = tf.squeeze (tf.one_hot (TrainLabelSet, 10), axis = 1)
+SqueezedTestLabel  = tf.squeeze (tf.one_hot (TestLabelSet, 10), axis = 1)
 
 
 # 1. 입력으로 들어가는 데이터 세트의 크기만큼 np.arange를 이용하여 List를 생성 (Cifar-10 데이터는 50,000개 이므로 50,000 리스트 생성)
