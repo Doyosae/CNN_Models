@@ -1,15 +1,13 @@
 import tensorflow as tf
 import numpy as np
 from tensorflow.keras.datasets.cifar10 import load_data
-(TrainDataSet, TrainLabelSet), (TestDataSet, TestLabelSet) = load_data ()
 
-Train_Labeling = tf.squeeze (tf.one_hot (TrainLabelSet, 10), axis = 1)
-Test_Labeling  = tf.squeeze (tf.one_hot (TestLabelSet, 10), axis = 1)
+# load_data로부터 cifar10의 훈련, 검증 데이터셋을 분리
+(TrainData, TrainLabel), (TestData, TestLabel) = load_data ()
 
-print ("훈련 이미지의 크기           ", np.shape (TrainDataSet))
-print ("훈련 라벨링의 크기           ", np.shape (Train_Labeling))
-print ("검사 이미지의 크기           ", np.shape (TestDataSet))
-print ("검사 라벨링의 크기           ", np.shape (Test_Labeling))
+# 라벨 데이터셋을 One-Hot 인코딩 처리
+SqueezedTrainLabel = tf.squeeze (tf.one_hot (TrainLabel, 10), axis = 1)
+SqueezedTestLabel  = tf.squeeze (tf.one_hot (TestLabel, 10),  axis = 1)
 
 # 1. 입력으로 들어가는 데이터 세트의 크기만큼 np.arange를 이용하여 List를 생성 (Cifar-10 데이터는 50,000개 이므로 50,000 리스트 생성)
 # 2. 이제 이 리스트의 원소들을 shuffle 해준다. 랜덤으로 정렬된 원소의 인덱스에 해당하는 데이터들을 뽑아서 ShuffleSet를 새로 만든다.
@@ -24,17 +22,16 @@ def Next_Batch_Function (number, data, labels):
 
     return np.asarray(DataShuffle), np.asarray(LabelsShuffle)
 
-"""
-1. tensorflow.kears.datasets.cifar10에서 load_data 명령어로 훈련 셋과 테스트 셋을 받아온다.
-2. X, Y의 Placeholder를 설정해주고, Dropout에서 살릴 노드의 확률을 KeepProbDropout 정의
-3. 훈련 라벨과 테스트 라벨은 원 핫 인코딩을 해준 다음에 차원을 줄여준다.
-"""
 
 """
-1. 합성곱 신경망 필터의 채널 갯수를 3으로 맞춘다.
-2. MNIST 이미지에서는 채널 한 개에서 모델을 설계한 것과 차이가 있음
-"""
+tensorflow.kears.datasets.cifar10에서 load_data 명령어로 훈련 셋과 테스트 셋을 받아온다.
+X, Y의 Placeholder를 설정해주고, Dropout에서 살릴 노드의 확률을 KeepProbDropout 정의
+훈련 라벨과 테스트 라벨은 원 핫 인코딩을 해준 다음에 차원을 줄여준다.
 
+합성곱 신경망 필터의 채널 갯수를 3으로 맞춘다.
+MNIST 이미지에서는 채널 한 개에서 모델을 설계한 것과 차이가 있음
+"""
+Epochs = 5000
 BatchSize = 256
 
 X = tf.placeholder (tf.float32, shape = [None, 32, 32, 3])
@@ -92,9 +89,9 @@ with tf.Session () as sess:
     print ("----------------------------------------")
     
     # Sessrion 4. range의 범위만큼 Epoch를 수행
-    for Epoch in range (5000):
+    for Epoch in range (Epochs):
         
-        batch = Next_Batch_Function (BatchSize, TrainDataSet, Train_Labeling.eval())
+        batch = Next_Batch_Function (BatchSize, TrainData, SqueezedTrainLabel.eval())
         sess.run (LossTrainingStep, feed_dict = {X : batch[0], Y : batch[1], keep_prob : 0.3})
 
         if Epoch % 100 == 0:
@@ -110,7 +107,7 @@ with tf.Session () as sess:
         TestAccuracy = 0.000
 
         for i in range (10) :
-            TestBatch = Next_Batch_Function(1000, TestDataSet, Test_Labeling.eval())
+            TestBatch = Next_Batch_Function(1000, TestData, SqueezedTestLabel.eval())
             TestAccuracy = TestAccuracy + Accuracy.eval (feed_dict = {X : TestBatch[0], Y : TestBatch[1], keep_prob: 1.0})
 
         # 테스트 데이터 10,000개를 1,000개 단위의 배치로 잘라서 각 배치의 Acc를 계산한다.
