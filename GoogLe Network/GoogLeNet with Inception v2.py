@@ -2,14 +2,12 @@ import tensorflow as tf
 import numpy as np
 from tensorflow.keras.datasets.cifar10 import load_data
 (TrainDataSet, TrainLabelSet), (TestDataSet, TestLabelSet) = load_data ()
+    
+TrainData = (TrainDataSet, TrainLabelSet)
+TestDat   = (TestDataSet, TestLabelSet)
 
-Train_Labeling = tf.squeeze (tf.one_hot (TrainLabelSet, 10), axis = 1)
-Test_Labeling  = tf.squeeze (tf.one_hot (TestLabelSet, 10), axis = 1)
-
-print ("훈련 이미지의 크기           ", np.shape (TrainDataSet))
-print ("훈련 라벨링의 크기           ", np.shape (Train_Labeling))
-print ("검사 이미지의 크기           ", np.shape (TestDataSet))
-print ("검사 라벨링의 크기           ", np.shape (Test_Labeling))
+SqueezedTrainLabel = tf.squeeze (tf.one_hot (TrainLabelSet, 10), axis = 1)
+SqueezedTestLabel  = tf.squeeze (tf.one_hot (TestLabelSet, 10),  axis = 1)
 
 
 def Build_Convolution_Network (inputs):
@@ -232,39 +230,39 @@ with tf.Session () as sess:
         
             for i in range (390):
 
-                trainBatch = Build_NextBatch_Function (BatchSize, TrainDataSet, Train_Labeling.eval())
+                trainBatch = Build_NextBatch_Function (BatchSize, TrainDataSet, SqueezedTrainLabel.eval())
                 sess.run (LossTraining1, feed_dict = {Input_Layer : trainBatch[0], Label_Layer : trainBatch[1],
                                                       phase : True})
-                LossValue = LossValue + sess.run (Lossfunction, feed_dict = {Input_Layer : trainBatch[0], Label_Layer : trainBatch[1],
+                LossValue = LossValue + sess.run (Lossfunction, feed_dict = {Input_Layer : trainBatch[0], 
+                                                                             Label_Layer : trainBatch[1],
                                                                              phase : True})
                 
         else:
             
             for i in range (390):
 
-                trainBatch = Build_NextBatch_Function (BatchSize, TrainDataSet, Train_Labeling.eval())
+                trainBatch = Build_NextBatch_Function (BatchSize, TrainDataSet, SqueezedTrainLabel.eval())
                 sess.run (LossTraining2, feed_dict = {Input_Layer : trainBatch[0], Label_Layer : trainBatch[1], 
                                                       phase : True})
-                LossValue = LossValue + sess.run (Lossfunction, feed_dict = {Input_Layer : trainBatch[0], Label_Layer : trainBatch[1], 
+                LossValue = LossValue + sess.run (Lossfunction, feed_dict = {Input_Layer : trainBatch[0], 
+                                                                             Label_Layer : trainBatch[1], 
                                                                              phase : True})
             
         LossValue = LossValue / 390
         LossValueList.append (LossValue)
         print ("   손실도는 :            %f" %LossValue)
-            
-            
-        ##############################################################################################################################
 
         
         # 학습하지 않은 테스트 이미지로 학습한 모델에 대해서 그 정확도를 계산한다.
         # 테스트 이미지는 총 10,000 장이다. 1,000장 단위로 배치를 만들고 총 10번 반복하여 테스트한다.
         # 각 배치마다의 Accuracy를 모두 더한 후, (Summation n=10) 다시 10으로 나누어서 Acc의 평균값을 구한다.
         TestAccuracy = 0.000
-
+        
         for i in range (10):
             
-            testBatch = Build_NextBatch_Function (1000, TestDataSet, Test_Labeling.eval())
-            TestAccuracy = TestAccuracy + sess.run (Accuracy, feed_dict = {Input_Layer : testBatch[0], Label_Layer : testBatch[1], 
+            testBatch = Build_NextBatch_Function (1000, TestDataSet, SqueezedTestLabel.eval())
+            TestAccuracy = TestAccuracy + sess.run (Accuracy, feed_dict = {Input_Layer : testBatch[0], 
+                                                                           Label_Layer : testBatch[1], 
                                                                            phase : False})
 
         # 테스트 데이터 10,000개를 1,000개 단위의 배치로 잘라서 각 배치의 Acc를 계산한다.
