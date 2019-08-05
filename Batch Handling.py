@@ -27,20 +27,3 @@ def generate_NextBatch_Function (number, data, labels) :
     LabelsShuffle = [labels[i] for i in DataRange]
 
     return np.asarray(DataShuffle), np.asarray(LabelsShuffle)
-
-
-# 3. BatchSize는 256으로 하고, Batch Set 함수를 호출한 뒤에 return 받은 batch의 크기를 출력해볼 것
-batch = generate_NextBatch_Function (256, TrainDataSet, TrainLabel_OneHotEncoding)
-print ("batch[0]의 크기", np.shape(batch[0]))
-print ("batch[1]의 크기", np.shape(batch[1]))
-
-
-# 4. Session을 열어서 특별히 batch[1] 내용들을 출력해볼 것
-sess = tf.Session()
-sess.run (tf.global_variables_initializer())
-
-for k in range (10) : 
-    LabelingPrint = sess.run (batch[1][k])
-    print (LabelingPrint)
-    
-sess.close()
