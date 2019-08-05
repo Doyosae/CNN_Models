@@ -1,13 +1,25 @@
 import tensorflow as tf
 import numpy as np
 from tensorflow.keras.datasets.cifar10 import load_data
-(TrainDataSet, TrainLabelSet), (TestDataSet, TestLabelSet) = load_data ()
-    
-TrainData = (TrainDataSet, TrainLabelSet)
-TestDat   = (TestDataSet, TestLabelSet)
 
-SqueezedTrainLabel = tf.squeeze (tf.one_hot (TrainLabelSet, 10), axis = 1)
-SqueezedTestLabel  = tf.squeeze (tf.one_hot (TestLabelSet, 10),  axis = 1)
+# load_data로부터 cifar10의 훈련, 검증 데이터셋을 분리
+(TrainData, TrainLabel), (TestData, TestLabel) = load_data ()
+
+# 라벨 데이터셋을 One-Hot 인코딩 처리
+SqueezedTrainLabel = tf.squeeze (tf.one_hot (TrainLabel, 10), axis = 1)
+SqueezedTestLabel  = tf.squeeze (tf.one_hot (TestLabel, 10),  axis = 1)
+
+# 데이터셋으로 부터 배치를 만드는 함수
+def Build_NextBatch_Function (number, data, labels) :
+    
+    DataRange = np.arange (0 , len(data))
+    np.random.shuffle (DataRange)
+    DataRange = DataRange [ : number]
+    
+    DataShuffle = [data[i] for i in DataRange]
+    LabelsShuffle = [labels[i] for i in DataRange]
+
+    return np.asarray(DataShuffle), np.asarray(LabelsShuffle)
 
 
 def Build_Convolution_Network (inputs):
@@ -72,19 +84,6 @@ def Build_Inception_Modular4 (inputs, size1):
     outputs = tf.nn.relu (outputs)
     
     return outputs
-
-
-# 데이터셋으로 부터 배치를 만드는 함수
-def Build_NextBatch_Function (number, data, labels) :
-    
-    DataRange = np.arange (0 , len(data))
-    np.random.shuffle (DataRange)
-    DataRange = DataRange [ : number]
-    
-    DataShuffle = [data[i] for i in DataRange]
-    LabelsShuffle = [labels[i] for i in DataRange]
-
-    return np.asarray(DataShuffle), np.asarray(LabelsShuffle)
 
 
 # 위에서 함수로 정의한 인셉션 구성요소 모듈들을 이용하여 두 가지 종류의 인셉션 모델을 클래스로 정의한다.
@@ -230,7 +229,7 @@ with tf.Session () as sess:
         
             for i in range (390):
 
-                trainBatch = Build_NextBatch_Function (BatchSize, TrainDataSet, SqueezedTrainLabel.eval())
+                trainBatch = Build_NextBatch_Function (BatchSize, TrainData, SqueezedTrainLabel.eval())
                 sess.run (LossTraining1, feed_dict = {Input_Layer : trainBatch[0], Label_Layer : trainBatch[1],
                                                       phase : True})
                 LossValue = LossValue + sess.run (Lossfunction, feed_dict = {Input_Layer : trainBatch[0], 
@@ -241,7 +240,7 @@ with tf.Session () as sess:
             
             for i in range (390):
 
-                trainBatch = Build_NextBatch_Function (BatchSize, TrainDataSet, SqueezedTrainLabel.eval())
+                trainBatch = Build_NextBatch_Function (BatchSize, TrainData, SqueezedTrainLabel.eval())
                 sess.run (LossTraining2, feed_dict = {Input_Layer : trainBatch[0], Label_Layer : trainBatch[1], 
                                                       phase : True})
                 LossValue = LossValue + sess.run (Lossfunction, feed_dict = {Input_Layer : trainBatch[0], 
@@ -260,7 +259,7 @@ with tf.Session () as sess:
         
         for i in range (10):
             
-            testBatch = Build_NextBatch_Function (1000, TestDataSet, SqueezedTestLabel.eval())
+            testBatch = Build_NextBatch_Function (1000, TestData, SqueezedTestLabel.eval())
             TestAccuracy = TestAccuracy + sess.run (Accuracy, feed_dict = {Input_Layer : testBatch[0], 
                                                                            Label_Layer : testBatch[1], 
                                                                            phase : False})
