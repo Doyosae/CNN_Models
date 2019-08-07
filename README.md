@@ -1,5 +1,9 @@
 # 이메일 (E-mail)  
   calidris.snipe@gmail.com  
+
+# 벤치마크 데이터셋  
+  Cifar-10  
+  URL : https://www.cs.toronto.edu/~kriz/cifar.html
   
 # 이 Repository를 만들면서 참조한 논문들  
 
