@@ -37,7 +37,9 @@ series 3에서는 Backbone Net에 대하여 체인 형태로 Residual Net이 동
 # Accuracy Summary  
 - Model 1  
   137 Epoch 부터 안정적인 85 ~ 86%의 Accuracy  
+  ![model1](https://github.com/Doyosae/CNN_Models/blob/master/Residual%20Network/Accuracy/model%201.png)
 - Model 2  
   81 Epoch 부터 안정적인 87% ~ 89% Accuracy  
 - Model 3  
   30 Epoch 부터 안정적인 85 ~ 86% Accuracy  
+  ![model3](https://github.com/Doyosae/CNN_Models/blob/master/Residual%20Network/Accuracy/model%203.png)
