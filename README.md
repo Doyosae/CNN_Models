@@ -31,7 +31,7 @@ URL : [https://www.cs.toronto.edu/~kriz/cifar.html](https://www.cs.toronto.edu/~
 2. GoogLENet model 2 (150 Epoch로 실험 중)  
 
 ## Accuracy Summery  
-Accuracy of ResNet  
+    Accuracy of ResNet (85% ~ 86%)
 ![ResNet model 1](https://github.com/Doyosae/CNN_Models/blob/master/Residual%20Network/Accuracy/model%201.png)  
-Accuracy of GoogLeNet  
+    Accuracy of GoogLeNet (80% ~ 81%)
 ![GoogLeNet model 2](https://github.com/Doyosae/CNN_Models/blob/master/GoogLe%20Network/Accuracy/model%202.png)  
