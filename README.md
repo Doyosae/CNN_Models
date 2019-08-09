@@ -33,5 +33,6 @@ URL : [https://www.cs.toronto.edu/~kriz/cifar.html](https://www.cs.toronto.edu/~
 ## Accuracy Summery  
     Accuracy of ResNet (85% ~ 86%)
 ![ResNet model 1](https://github.com/Doyosae/CNN_Models/blob/master/Residual%20Network/Accuracy/model%201.png)  
+
     Accuracy of GoogLeNet (80% ~ 81%)
 ![GoogLeNet model 2](https://github.com/Doyosae/CNN_Models/blob/master/GoogLe%20Network/Accuracy/model%202.png)  
