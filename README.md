@@ -30,6 +30,8 @@ URL : [https://www.cs.toronto.edu/~kriz/cifar.html](https://www.cs.toronto.edu/~
 1. ResNet model 1 (150 Epoch로 실험)  
 2. GoogLENet model 2 (150 Epoch로 실험 중)  
 
-## Accuracy Summery
-[CNN_Models/model 1.png at master · Doyosae/CNN_Models · GitHub](https://github.com/Doyosae/CNN_Models/blob/master/Residual%20Network/Accuracy/model%201.png)  
-[CNN_Models/model 2.png at master · Doyosae/CNN_Models · GitHub](https://github.com/Doyosae/CNN_Models/blob/master/GoogLe%20Network/Accuracy/model%202.png)  
+## Accuracy Summery  
+Accuracy of ResNet  
+![ResNet model 1](https://github.com/Doyosae/CNN_Models/blob/master/Residual%20Network/Accuracy/model%201.png)  
+Accuracy of GoogLeNet  
+![GoogLeNet model 2](https://github.com/Doyosae/CNN_Models/blob/master/GoogLe%20Network/Accuracy/model%202.png)  
