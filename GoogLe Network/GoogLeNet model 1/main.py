@@ -138,7 +138,7 @@ with tf.Session () as sess:
                 LossValue = LossValue + sess.run (Lossfunction, feed_dict = {Input_Layer : trainBatch[0], 
                                                                              Label_Layer : trainBatch[1],
                                                                              model.phase : True}) 
-        elif Epoch >= 50 and Epoch < 750:
+        elif Epoch >= 50 and Epoch < 75:
             
             for i in range (390):
 
