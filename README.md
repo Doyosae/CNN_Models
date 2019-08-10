@@ -1,4 +1,4 @@
-# Report  
+# Introduction  
 Cifar-10 데이터로 다양한 CNN 구조들을 실험합니다.  
 잘 알려진 딥러닝 알고리즘들은 이미 만들어져있는 것들을 써도 됩니다. 그럼에도 다시 만들어보는 이유는 두 가지가 있습니다.  
 1. 바퀴를 재발명 한다는 마음입니다. 기나긴 코드의 안에는 코딩의 테크닉적 모습도, 딥러닝의 구조적 모습도 공부할 수 있습니다.  
@@ -32,7 +32,7 @@ URL : [https://www.cs.toronto.edu/~kriz/cifar.html](https://www.cs.toronto.edu/~
 
 ## Model Summary 
 1. ResNet model 1 (150 Epoch로 실험)  
-2. GoogLENet model 2 (150 Epoch로 실험 중)  
+2. GoogLeNet model 2 (150 Epoch로 실험 중)  
 
 ## Accuracy Summery  
     Accuracy of ResNet (85% ~ 86%)
