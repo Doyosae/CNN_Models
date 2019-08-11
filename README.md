@@ -46,5 +46,6 @@ Epoch < 150, lr = 0.00050
 ## Accuracy Summery  
     Accuracy of GoogLeNet model 2 Type A (85% ~ 86%)  
 ![GoogLeNet Type A](https://github.com/Doyosae/CNN_Models/blob/master/GoogLe%20Network/GoogLeNet%20model%202/accuracy/Accuracy%20Graph.png) 
+  
     Accuracy of ResNet model 1 Type B (85% ~ 86%)  
 ![ResNet Type B](https://github.com/Doyosae/CNN_Models/blob/master/Residual%20Network/Accuracy/model%201.png)   
