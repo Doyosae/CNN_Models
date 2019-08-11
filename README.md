@@ -9,14 +9,13 @@ calidris.snipe@gmail.com
 URL : [https://www.cs.toronto.edu/~kriz/cifar.html](https://www.cs.toronto.edu/~kriz/cifar.html) 
   
 * Setting A  
-001 <= Epoch < 050, lr = 0.01  
-050 <= Epoch < 100, lr = 0.005  
-100 <= Epoch < 125, lr = 0.0025  
+Epoch < 50, lr = 0.001  
+Epoch < 75, lr = 0.00075  
+Epoch < 99, lr = 0.00050  
   
 * Setting B  
-001 <= Epoch < 050, lr = 0.1  
-050 <= Epoch < 100, lr = 0.01  
-100 <= Epoch < 125, lr = 0.001  
+Epoch < 100, lr = 0.001
+Epoch < 150, lr = 0.0005
   
 ## Repository를 만들면서 참조한 논문들  
 * Striving for Simplicity: The All Convolutional Net (ACN)  
@@ -39,6 +38,5 @@ URL : [https://www.cs.toronto.edu/~kriz/cifar.html](https://www.cs.toronto.edu/~
 2. GoogLeNet model 2 (150 Epoch로 실험 중)  
   
 ## Accuracy Summery  
-    Accuracy of ResNet (85% ~ 86%)
-  
-    Accuracy of GoogLeNet (82% ~ 83%)
+    Accuracy of ResNet Setting B (85% ~ 86%)  
+![ResNet Setting B](https://github.com/Doyosae/CNN_Models/blob/master/Residual%20Network/Accuracy/model%201.png)  
