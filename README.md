@@ -10,8 +10,8 @@ URL : [https://www.cs.toronto.edu/~kriz/cifar.html](https://www.cs.toronto.edu/~
   
 * Setting A  
 001 <= Epoch < 050, lr = 0.01  
-050 <= Epoch < 100, lr = 0.001  
-100 <= Epoch < 150, lr = 0.0001  
+050 <= Epoch < 100, lr = 0.005  
+100 <= Epoch < 150, lr = 0.0025  
   
 * Setting B  
 001 <= Epoch < 050, lr = 0.1  
