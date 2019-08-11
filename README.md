@@ -8,14 +8,19 @@ calidris.snipe@gmail.com
 * Cifar-10  
 URL : [https://www.cs.toronto.edu/~kriz/cifar.html](https://www.cs.toronto.edu/~kriz/cifar.html) 
   
-* model A (Epoch 100)  
+* Type A (Epoch 100)  
 Epoch < 50, lr = 0.001  
 Epoch < 75, lr = 0.00075  
 Epoch < 99, lr = 0.00050  
   
-* model B (Epoch 150)  
-Epoch < 100, lr = 0.001  
+* Type B (Epoch 150)  
+Epoch < 050, lr = 0.001
 Epoch < 150, lr = 0.0005  
+  
+* Type C (Epoch 150)  
+Epoch < 030, lr = 0.001  
+Epoch < 100, lr = 0.00075  
+Epoch < 150, lr = 0.00050   
   
 ## Repository를 만들면서 참조한 논문들  
 * Striving for Simplicity: The All Convolutional Net (ACN)  
@@ -34,9 +39,12 @@ Epoch < 150, lr = 0.0005
   URL : https://arxiv.org/abs/1512.00567  
   
 ## Model Summary 
-1. ResNet model 1 (150 Epoch로 실험)  
-2. GoogLeNet model 2 (150 Epoch로 실험 중)  
+1. GoogLeNet model 2 (Type A)
+1. ResNet model 1 (Type B)  
+
   
 ## Accuracy Summery  
-    Accuracy of ResNet Setting B (85% ~ 86%)  
-![ResNet Setting B](https://github.com/Doyosae/CNN_Models/blob/master/Residual%20Network/Accuracy/model%201.png)  
+    Accuracy of GoogLeNet model 2 Type A (85% ~ 86%)  
+![GoogLeNet Type A](https://github.com/Doyosae/CNN_Models/blob/master/GoogLe%20Network/GoogLeNet%20model%202/accuracy/Accuracy%20Graph.png) 
+    Accuracy of ResNet model 1 Type B (85% ~ 86%)  
+![ResNet Type B](https://github.com/Doyosae/CNN_Models/blob/master/Residual%20Network/Accuracy/model%201.png)   
