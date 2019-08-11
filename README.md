@@ -6,14 +6,24 @@ Cifar-10 데이터로 다양한 CNN 구조들을 실험합니다.
    직접 작성해보면서 문득 개량의 아이디어가 떠오를지도 모릅니다. 그것을 바로 구현하고 테스트해보십시오!   
    저 또한 코드를 작성하면서 많이 배웠습니다. 앞으로도 이러한 활동들을 계속할 것입니다. 덧붙어 세상에서 가장 쉬운 코드를요.  
    그래서 이제껏 그 어떤 코드 보다도 제가 작성한 코드가 책처럼 술술 읽히는 코드이라 자신합니다.  
-
+  
 ## 이메일 (E-mail)  
 calidris.snipe@gmail.com  
-
-## 벤치마크 데이터셋  
-Cifar-10  
+  
+## 벤치마크 데이터셋 & 훈련 기본 조건
+* Cifar-10  
 URL : [https://www.cs.toronto.edu/~kriz/cifar.html](https://www.cs.toronto.edu/~kriz/cifar.html) 
-
+  
+* Setting A  
+001 <= Epoch < 050, lr = 0.001  
+050 <= Epoch < 100, lr = 0.0005  
+100 <= Epoch < 150, lr = 0.00025  
+  
+* Setting B  
+001 <= Epoch < 050, lr = 0.01  
+050 <= Epoch < 100, lr = 0.005  
+100 <= Epoch < 150, lr = 0.0025  
+  
 ## Repository를 만들면서 참조한 논문들  
 * Striving for Simplicity: The All Convolutional Net (ACN)  
   URL : https://arxiv.org/abs/1412.6806?context=cs  
@@ -29,11 +39,11 @@ URL : [https://www.cs.toronto.edu/~kriz/cifar.html](https://www.cs.toronto.edu/~
 
 * Rethinking the Inception Architecture for Computer Vision (Inception v2)  
   URL : https://arxiv.org/abs/1512.00567  
-
+  
 ## Model Summary 
 1. ResNet model 1 (150 Epoch로 실험)  
 2. GoogLeNet model 2 (150 Epoch로 실험 중)  
-
+  
 ## Accuracy Summery  
     Accuracy of ResNet (85% ~ 86%)
 ![ResNet model 1](https://github.com/Doyosae/CNN_Models/blob/master/Residual%20Network/Accuracy/model%201.png)  
