@@ -13,8 +13,14 @@ Epoch < 50, lr = 0.001
 Epoch < 75, lr = 0.00075  
 Epoch < 99, lr = 0.00050  
   
+* Type A+ (Epoch 100)  
+Epoch < 25, lr = 0.001  
+Epoch < 50, lr = 0.0008  
+Epoch < 75, lr = 0.0006  
+Epoch < 99, lr = 0.0005  
+  
 * Type B (Epoch 150)  
-Epoch < 050, lr = 0.001
+Epoch < 050, lr = 0.001  
 Epoch < 150, lr = 0.0005  
   
 * Type C (Epoch 150)  
