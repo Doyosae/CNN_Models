@@ -8,14 +8,14 @@ calidris.snipe@gmail.com
 * Cifar-10  
 URL : [https://www.cs.toronto.edu/~kriz/cifar.html](https://www.cs.toronto.edu/~kriz/cifar.html) 
   
-* Setting A  
+* model A (Epoch 100)  
 Epoch < 50, lr = 0.001  
 Epoch < 75, lr = 0.00075  
 Epoch < 99, lr = 0.00050  
   
-* Setting B  
-Epoch < 100, lr = 0.001
-Epoch < 150, lr = 0.0005
+* model B (Epoch 150)  
+Epoch < 100, lr = 0.001  
+Epoch < 150, lr = 0.0005  
   
 ## Repository를 만들면서 참조한 논문들  
 * Striving for Simplicity: The All Convolutional Net (ACN)  
