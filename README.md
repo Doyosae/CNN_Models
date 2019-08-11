@@ -20,9 +20,9 @@ URL : [https://www.cs.toronto.edu/~kriz/cifar.html](https://www.cs.toronto.edu/~
 100 <= Epoch < 150, lr = 0.00025  
   
 * Setting B  
-001 <= Epoch < 050, lr = 0.01  
-050 <= Epoch < 100, lr = 0.005  
-100 <= Epoch < 150, lr = 0.0025  
+001 <= Epoch < 050, lr = 0.1  
+050 <= Epoch < 100, lr = 0.01  
+100 <= Epoch < 150, lr = 0.001  
   
 ## Repository를 만들면서 참조한 논문들  
 * Striving for Simplicity: The All Convolutional Net (ACN)  
