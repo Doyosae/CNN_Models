@@ -19,6 +19,11 @@ Epoch < 50, lr = 0.0008
 Epoch < 75, lr = 0.0006  
 Epoch < 99, lr = 0.0005  
   
+* Type A++ (Epoch 100)  
+Epoch < 50, lr = 0.01  
+Epoch < 75, lr = 0.0075  
+Epoch < 99, lr = 0.0050  
+  
 * Type B (Epoch 150)  
 Epoch < 050, lr = 0.001  
 Epoch < 150, lr = 0.0005  
@@ -45,15 +50,16 @@ Epoch < 150, lr = 0.00050
   URL : https://arxiv.org/abs/1512.00567  
   
 ## Model Summary 
-1. GoogLeNet model 2 (Type A)
-1. ResNet model 1 (Type B)  
+* GoogLeNet model 2 (Type A)  
+* GoogLeNet model 3 (Type A+)  
+* ResNet model 1 (Type B)  
 
   
 ## Accuracy Summery  
-    Accuracy of GoogLeNet model 2 Type A (83% ~ 84%)  
-![GoogLeNet Type A](https://github.com/Doyosae/CNN_Models/blob/master/GoogLe%20Network/GoogLeNet%20model%202/accuracy/Accuracy%20Graph.png) 
+    Accuracy of GoogLeNet model 2 (Type A) (83% ~ 84%)  
+![GoogLeNet Type A](https://github.com/Doyosae/CNN_Models/blob/master/GoogLe%20Network/GoogLeNet%20model%202/accuracy/model%202.png)  
   
-    Accuracy of GoogLeNet model 3 Type A+ (81% ~ 82%)  
+    Accuracy of GoogLeNet model 3 (Type A+) (81% ~ 82%)  
 ![GoogLeNet Type A+](https://github.com/Doyosae/CNN_Models/blob/master/GoogLe%20Network/GoogLeNet%20modle%203/accuracy/model%203.png)  
   
     Accuracy of ResNet model 1 Type B (85% ~ 86%)  
