@@ -54,8 +54,7 @@ Epoch < 150, lr = 0.00050
 ![GoogLeNet Type A](https://github.com/Doyosae/CNN_Models/blob/master/GoogLe%20Network/GoogLeNet%20model%202/accuracy/Accuracy%20Graph.png) 
   
     Accuracy of GoogLeNet model 3 Type B (83% ~ 84%)  
-![GoogLeNet Type B]
-(https://github.com/Doyosae/CNN_Models/blob/master/GoogLe%20Network/GoogLeNet%20modle%203/accuracy/model%203.png)  
+![GoogLeNet Type B](https://github.com/Doyosae/CNN_Models/blob/master/GoogLe%20Network/GoogLeNet%20modle%203/accuracy/model%203.png)  
   
     Accuracy of ResNet model 1 Type B (85% ~ 86%)  
 ![ResNet Type B](https://github.com/Doyosae/CNN_Models/blob/master/Residual%20Network/Accuracy/model%201.png)   
