@@ -1,10 +1,10 @@
 # Introduction  
-Cifar-10 데이터로 다양한 CNN 구조들을 실험합니다.  
+Cifar-10 데이터로 다양한 CNN 구조들을 실험하였습니다. (Tensorflow 1.14)
   
 ## 이메일 (E-mail)  
 calidris.snipe@gmail.com  
   
-## 벤치마크 데이터셋 & 훈련 기본 조건
+## 벤치마크 데이터셋 & 훈련 조건
 * Cifar-10  
 URL : [https://www.cs.toronto.edu/~kriz/cifar.html](https://www.cs.toronto.edu/~kriz/cifar.html) 
   
