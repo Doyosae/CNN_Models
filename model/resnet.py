@@ -1,10 +1,11 @@
+import sys
 import math
 import torch
 import numpy as np
 import torch.nn as nn
 import torch.nn.functional as F
 from torchsummary import summary
-from dropout import *
+from .dropout import *
         
 
 class Basic_Block(nn.Module):
@@ -15,18 +16,18 @@ class Basic_Block(nn.Module):
         super(Basic_Block, self).__init__()
 
         self.conv1 = nn.Conv2d(in_planes, planes, kernel_size = 3, stride = stride, padding = 1, bias = False)
-        self.drop1 = nn.Dropout2d(drop_ratio = drop_ratio)
+        self.drop1 = Scaling_Dropout(drop_ratio = drop_ratio)
         self.bn1   = nn.BatchNorm2d(planes)
 
         self.conv2 = nn.Conv2d(planes, planes, kernel_size = 3, stride = 1, padding = 1, bias = False)
-        self.drop2 = nn.Dropout2d(drop_ratio = drop_ratio)
+        self.drop2 = Scaling_Dropout(drop_ratio = drop_ratio)
         self.bn2   = nn.BatchNorm2d(planes)
 
         self.shortcut = nn.Sequential()
         if stride != 1 or in_planes != self.expansion*planes:
             self.shortcut = nn.Sequential(
                 nn.Conv2d(in_planes, self.expansion*planes, kernel_size = 1, stride = stride, bias = False),
-                nn.Dropout2d(drop_ratio = drop_ratio),
+                Scaling_Dropout(drop_ratio = drop_ratio),
                 nn.BatchNorm2d(self.expansion*planes))
 
     def forward(self, x):
@@ -56,22 +57,22 @@ class Bottle_Neck(nn.Module):
         super(Bottle_Neck, self).__init__()
 
         self.conv1 = nn.Conv2d(in_planes, planes, kernel_size = 1, bias = False)
-        self.drop1 = nn.Dropout2d(drop_ratio = drop_ratio)
+        self.drop1 = Scaling_Dropout(drop_ratio = drop_ratio)
         self.bn1   = nn.BatchNorm2d(planes)
 
         self.conv2 = nn.Conv2d(planes, planes, kernel_size = 3, stride = stride, padding = 1, bias = False)
-        self.drop2 = nn.Dropout2d(drop_ratio = drop_ratio)
+        self.drop2 = Scaling_Dropout(drop_ratio = drop_ratio)
         self.bn2   = nn.BatchNorm2d(planes)
 
         self.conv3 = nn.Conv2d(planes, self.expansion * planes, kernel_size = 1, bias = False)
-        self.drop3 = nn.Dropout2d(drop_ratio = drop_ratio)
+        self.drop3 = Scaling_Dropout(drop_ratio = drop_ratio)
         self.bn3   = nn.BatchNorm2d(self.expansion * planes)
 
         self.shortcut = nn.Sequential()
         if stride != 1 or in_planes != self.expansion*planes:
             self.shortcut = nn.Sequential(
                 nn.Conv2d(in_planes, self.expansion*planes, kernel_size = 1, stride = stride, bias = False),
-                nn.Dropout2d(drop_ratio = drop_ratio),
+                Scaling_Dropout(drop_ratio = drop_ratio),
                 nn.BatchNorm2d(self.expansion*planes))
 
     def forward(self, x):
@@ -105,7 +106,7 @@ class ResNet(nn.Module):
         self.in_planes  = in_channels
         self.drop_ratio = drop_ratio
         self.conv1 = nn.Conv2d(3, in_channels, kernel_size = 3, stride = 1, padding = 1, bias = False)
-        self.drop1 = nn.Dropout2d(drop_ratio = drop_ratio)
+        self.drop1 = Scaling_Dropout(drop_ratio = drop_ratio)
         self.bn1   = nn.BatchNorm2d(in_channels)
 
         self.layer1 = self.make_layers(block, in_channels, num_blocks[0], stride = 1)
@@ -158,9 +159,3 @@ def ResNet101(in_channels = 64, drop_ratio = 0.0):
 
 def ResNet152(in_channels = 64, drop_ratio = 0.0):
     return ResNet(Bottle_Neck, in_channels, [3, 8, 36, 3], num_classes = 10, drop_ratio = drop_ratio)
-
-
-
-if __name__ == "__main__":
-      test = ResNet18(16, 0.0).to(torch.device("cuda:0" if torch.cuda.is_available() else 'cpu'))
-      summary(test, (3, 32, 32))

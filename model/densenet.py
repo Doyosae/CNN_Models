@@ -4,18 +4,20 @@ import numpy as np
 import torch.nn as nn
 import torch.nn.functional as F
 from torchsummary import summary
-from dropout import *
+from .dropout import *
 
 
 class Bottleneck(nn.Module):
+
     def __init__(self, in_planes, growth_rate, drop_ratio):
         super(Bottleneck, self).__init__()
+        
         self.bn1   = nn.BatchNorm2d(in_planes)
-        self.dr1   = nn.Dropout2d(drop_ratio = drop_ratio)
+        self.dr1   = Scaling_Dropout(drop_ratio = drop_ratio)
         self.conv1 = nn.Conv2d(in_planes, 4 * growth_rate, kernel_size = 1, bias = False)
 
         self.bn2   = nn.BatchNorm2d(4 * growth_rate)
-        self.dr2   = nn.Dropout2d(drop_ratio = drop_ratio)
+        self.dr2   = Scaling_Dropout(drop_ratio = drop_ratio)
         self.conv2 = nn.Conv2d(4 * growth_rate, growth_rate, kernel_size = 3, padding = 1, bias = False)
 
     def forward(self, x):
@@ -35,11 +37,14 @@ class Bottleneck(nn.Module):
         return out
 
 
+
 class Transition(nn.Module):
+
     def __init__(self, in_planes, out_planes, drop_ratio):
         super(Transition, self).__init__()
+
         self.bn   = nn.BatchNorm2d(in_planes)
-        self.dr   = nn.Dropout2d(drop_ratio = drop_ratio)
+        self.dr   = Scaling_Dropout(drop_ratio = drop_ratio)
         self.conv = nn.Conv2d(in_planes, out_planes, kernel_size=1, bias=False)
 
     def forward(self, x):
@@ -53,14 +58,17 @@ class Transition(nn.Module):
         return out
 
 
+
 class DenseNet(nn.Module):
+
     def __init__(self, block, nblocks, growth_rate=12, reduction=0.5, num_classes=10, drop_ratio = 0.0):
         super(DenseNet, self).__init__()
+
         self.growth_rate = growth_rate
 
         num_planes = 2*growth_rate
         self.conv1 = nn.Conv2d(3, num_planes, kernel_size=3, padding=1, bias=False)
-        self.dr1   = nn.Dropout2d(drop_ratio = drop_ratio)
+        self.dr1   = Scaling_Dropout(drop_ratio = drop_ratio)
 
         self.dense1 = self.make_layers(block, num_planes, nblocks[0], drop_ratio)
         num_planes  = num_planes + nblocks[0]*growth_rate
@@ -107,22 +115,14 @@ class DenseNet(nn.Module):
 
 
 
-def DenseNet121(drop_ratio, growth_rate = 32):
+def DenseNet121(growth_rate = 32, drop_ratio = 0.0):
     return DenseNet(Bottleneck, [6, 12, 24, 16], growth_rate = growth_rate, drop_ratio = drop_ratio)
 
-def DenseNet169(drop_ratio, growth_rate = 32):
+def DenseNet169(growth_rate = 32, drop_ratio = 0.0):
     return DenseNet(Bottleneck, [6, 12, 32, 32], growth_rate = growth_rate, drop_ratio = drop_ratio)
 
-def DenseNet201(drop_ratio, growth_rate = 32):
-    return DenseNet(Bottleneck, [6, 12, 48, 32], growth_rate = growth_rate2, drop_ratio = drop_ratio)
+def DenseNet201(growth_rate = 32, drop_ratio = 0.0):
+    return DenseNet(Bottleneck, [6, 12, 48, 32], growth_rate = growth_rate, drop_ratio = drop_ratio)
 
-def DenseNet161(drop_ratio, growth_rate = 32):
+def DenseNet161(growth_rate = 32, drop_ratio = 0.0):
     return DenseNet(Bottleneck, [6, 12, 36, 24], growth_rate = growth_rate, drop_ratio = drop_ratio)
-
-
-
-if __name__ == "__main__":
-
-    # growth_rate는 in_channels 수에 비례    
-    test = DenseNet121(0.5, 16).to(torch.device("cuda:0" if torch.cuda.is_available() else 'cpu'))
-    summary(test, (3, 32, 32))

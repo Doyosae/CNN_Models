@@ -5,7 +5,7 @@ import torch.nn as nn
 import torch.nn.init as init
 import torch.nn.functional as F
 from torchsummary import summary
-from dropout import *
+from .dropout import *
 
 
 vgg_config = {'vgg11': [64, 'M', 128, 'M', 256, 256, 'M', 512, 512, 'M', 512, 512, 'M'],
@@ -14,11 +14,11 @@ vgg_config = {'vgg11': [64, 'M', 128, 'M', 256, 256, 'M', 512, 512, 'M', 512, 51
               'vgg19': [64, 64, 'M', 128, 128, 'M', 256, 256, 256, 256, 'M', 512, 512, 512, 512, 'M', 512, 512, 512, 512, 'M']}
 
 
-def prune_cfg (cfg_list, drop_ratio):
+def vgg_slim_config (cfg_list, drop_ratio):
 
     prune_cfg = {'prune' : []}
 
-    for data in cfg['vgg19']:
+    for data in cfg_list:
         if type(data) is int:
             prune_cfg["prune"] = prune_cfg["prune"] + [int(drop_ratio * data)]
         else:
@@ -70,62 +70,9 @@ def make_layers (model_option_config, batch_norm = False, drop_out = False, drop
             if batch_norm == True and drop_out == False:
                 layers = layers + [conv2d, nn.BatchNorm2d(convolution_option), nn.ReLU(inplace = True)]
             elif batch_norm == True and drop_out == True:
-                layers = layers + [conv2d, nn.Dropout2d(drop_ratio), nn.BatchNorm2d(convolution_option), nn.ReLU(inplace = True)]
+                layers = layers + [conv2d, Scaling_Dropout(drop_ratio), nn.BatchNorm2d(convolution_option), nn.ReLU(inplace = True)]
             else:
                 layers = layers + [conv2d, nn.ReLU(inplace = True)]
 
             in_channels = convolution_option
     return nn.Sequential(*layers), model_option_config[-2]
-
-
-# def vgg11():
-#     """VGG 11-layer model (configuration "A")"""
-#     return VGG(make_layers(vgg_config['A']))
-
-
-# def vgg11_bn():
-#     """VGG 11-layer model (configuration "A") with batch normalization"""
-#     return VGG(make_layers(vgg_config['A'], batch_norm=True))
-
-
-# def vgg13():
-#     """VGG 13-layer model (configuration "B")"""
-#     return VGG(make_layers(vgg_config['B']))
-
-
-# def vgg13_bn():
-#     """VGG 13-layer model (configuration "B") with batch normalization"""
-#     return VGG(make_layers(vgg_config['B'], batch_norm=True))
-
-
-# def vgg16():
-#     """VGG 16-layer model (configuration "D")"""
-#     return VGG(make_layers(vgg_config['D']))
-
-
-# def vgg16_bn():
-#     """VGG 16-layer model (configuration "D") with batch normalization"""
-#     return VGG(make_layers(vgg_config['D'], batch_norm=True))
-
-
-# def vgg19():
-#     """VGG 19-layer model (configuration "E")"""
-#     return VGG(make_layers(vgg_config['E']))
-
-
-# def vgg19_bn():
-#     """VGG 19-layer model (configuration 'E') with batch normalization"""
-#     return VGG(make_layers(vgg_config['E'], batch_norm=True))
-
-
-if __name__ == "__main__":
-    device = torch.device("cuda:0" if torch.cuda.is_available() else 'cpu')
-
-    # vgg config에서 모델을 로드하는 방법
-    test = VGG(make_layers(vgg_config["vgg11"], True, True, 0.0))
-    summary(test.to(device), (3, 32, 32))
-    
-    # vgg 모델에서 drop_ratio를 주고 프루닝한 모델을 로드하는 방법
-    prune_list = prune_vgg_config(vgg_config["vgg11"], 0.5)
-    test = VGG(make_layers(prune_list["prune"], True, True, 0.0))
-    summary(test.to(device), (3, 32, 32))
