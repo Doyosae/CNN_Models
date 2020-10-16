@@ -13,11 +13,11 @@ class Bottleneck(nn.Module):
         super(Bottleneck, self).__init__()
         
         self.bn1   = nn.BatchNorm2d(in_planes)
-        self.dr1   = Scaling_Dropout(drop_ratio = drop_ratio)
+        self.dr1   = Dropout2d(drop_ratio = drop_ratio)
         self.conv1 = nn.Conv2d(in_planes, 4 * growth_rate, kernel_size = 1, bias = False)
 
         self.bn2   = nn.BatchNorm2d(4 * growth_rate)
-        self.dr2   = Scaling_Dropout(drop_ratio = drop_ratio)
+        self.dr2   = Dropout2d(drop_ratio = drop_ratio)
         self.conv2 = nn.Conv2d(4 * growth_rate, growth_rate, kernel_size = 3, padding = 1, bias = False)
 
     def forward(self, x):
@@ -44,7 +44,7 @@ class Transition(nn.Module):
         super(Transition, self).__init__()
 
         self.bn   = nn.BatchNorm2d(in_planes)
-        self.dr   = Scaling_Dropout(drop_ratio = drop_ratio)
+        self.dr   = Dropout2d(drop_ratio = drop_ratio)
         self.conv = nn.Conv2d(in_planes, out_planes, kernel_size=1, bias=False)
 
     def forward(self, x):
@@ -68,7 +68,7 @@ class DenseNet(nn.Module):
 
         num_planes = 2*growth_rate
         self.conv1 = nn.Conv2d(3, num_planes, kernel_size=3, padding=1, bias=False)
-        self.dr1   = Scaling_Dropout(drop_ratio = drop_ratio)
+        self.dr1   = Dropout2d(drop_ratio = drop_ratio)
 
         self.dense1 = self.make_layers(block, num_planes, nblocks[0], drop_ratio)
         num_planes  = num_planes + nblocks[0]*growth_rate

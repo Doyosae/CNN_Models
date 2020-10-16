@@ -8,30 +8,29 @@ from torchsummary import summary
 from .dropout import *
 
 
-vgg_config = {'vgg11': [64, 'M', 128, 'M', 256, 256, 'M', 512, 512, 'M', 512, 512, 'M'],
-              'vgg13': [64, 64, 'M', 128, 128, 'M', 256, 256, 'M', 512, 512, 'M', 512, 512, 'M'],
-              'vgg16': [64, 64, 'M', 128, 128, 'M', 256, 256, 256, 'M', 512, 512, 512, 'M', 512, 512, 512, 'M'],
-              'vgg19': [64, 64, 'M', 128, 128, 'M', 256, 256, 256, 256, 'M', 512, 512, 512, 512, 'M', 512, 512, 512, 512, 'M']}
+vgg_configuration = {'vgg11': [64, 'M', 128, 'M', 256, 256, 'M', 512, 512, 'M', 512, 512, 'M'],
+                    'vgg13': [64, 64, 'M', 128, 128, 'M', 256, 256, 'M', 512, 512, 'M', 512, 512, 'M'],
+                    'vgg16': [64, 64, 'M', 128, 128, 'M', 256, 256, 256, 'M', 512, 512, 512, 'M', 512, 512, 512, 'M'],
+                    'vgg19': [64, 64, 'M', 128, 128, 'M', 256, 256, 256, 256, 'M', 512, 512, 512, 512, 'M', 512, 512, 512, 512, 'M']}
 
 
-def slimvgg_make_layers (cfg_list, drop_ratio):
-    prune_cfg = {'prune' : []}
+def slim_configuration (layer_configuration, prune_ratio):
+    prune_configuration = []
 
-    for data in cfg_list:
-        if type(data) is int:
-            prune_cfg["prune"] = prune_cfg["prune"] + [int(drop_ratio * data)]
+    for config in layer_configuration:
+        if type(config) is int:
+            prune_configuration = prune_configuration + [int(prune_ratio * config)]
         else:
-            prune_cfg["prune"] = prune_cfg["prune"] + [data]
+            prune_configuration = prune_configuration + [config]
 
-    return prune_cfg
+    return prune_configuration
 
 
-def make_layers (model_option_config, batch_norm = True, drop_out = False, drop_ratio = 0.0):
+def make_layers (layer_configuration, batch_norm = True, drop_out = False, drop_ratio = 0.0):
     layers      = []
     in_channels = 3
 
-    for convolution_option in model_option_config:
-
+    for convolution_option in layer_configuration:
         if convolution_option == 'M':
             layers = layers + [nn.MaxPool2d(kernel_size = 2, stride = 2)]
         else: 
@@ -44,8 +43,8 @@ def make_layers (model_option_config, batch_norm = True, drop_out = False, drop_
             else:
                 layers = layers + [conv2d, nn.ReLU(inplace = True)]
             in_channels = convolution_option
-            
-    return nn.Sequential(*layers), model_option_config[-2]
+
+    return nn.Sequential(*layers), layer_configuration[-2]
 
 
 class VGG (nn.Module):
@@ -67,3 +66,33 @@ class VGG (nn.Module):
         outputs = self.classifier(outputs)
 
         return outputs
+
+
+
+def VGG11 (batch_norm = True, drop_out = False, drop_ratio = 0.0):
+    return VGG(make_layers(vgg_configuration["vgg11"], batch_norm, drop_out, drop_ratio))
+
+def VGG13(batch_norm = True, drop_out = False, drop_ratio = 0.0):
+    return VGG(make_layers(vgg_configuration["vgg13"], batch_norm, drop_out, drop_ratio))
+
+def VGG16(batch_norm = True, drop_out = False, drop_ratio = 0.0):
+    return VGG(make_layers(vgg_configuration["vgg16"], batch_norm, drop_out, drop_ratio))
+
+def VGG19(batch_norm = True, drop_out = False, drop_ratio = 0.0):
+    return VGG(make_layers(vgg_configuration["vgg19"], batch_norm, drop_out, drop_ratio))
+
+def Slim_VGG11 (batch_norm = True, drop_out = False, drop_ratio = 0.0, prune_ratio = 0.0):
+    prune_config = slim_configuration(vgg_configuration["vgg11"], prune_ratio)
+    return VGG(make_layers(prune_config, batch_norm, drop_out, drop_ratio))
+
+def Slim_VGG13 (batch_norm = True, drop_out = False, drop_ratio = 0.0, prune_ratio = 0.0):
+    prune_config = slim_configuration(vgg_configuration["vgg13"], prune_ratio)
+    return VGG(make_layers(prune_config, batch_norm, drop_out, drop_ratio))
+
+def Slim_VGG16 (batch_norm = True, drop_out = False, drop_ratio = 0.0, prune_ratio = 0.0):
+    prune_config = slim_configuration(vgg_configuration["vgg16"], prune_ratio)
+    return VGG(make_layers(prune_config, batch_norm, drop_out, drop_ratio))
+
+def Slim_VGG19 (batch_norm = True, drop_out = False, drop_ratio = 0.0, prune_ratio = 0.0):
+    prune_config = slim_configuration(vgg_configuration["vgg19"], prune_ratio)
+    return VGG(make_layers(prune_config, batch_norm, drop_out, drop_ratio))
