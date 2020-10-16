@@ -6,28 +6,25 @@ import torch.nn.functional as F
 from torchsummary import summary
 
 
-
-class Normal_Dropout (nn.Module):
+class Dropout2d (nn.Module):
 
     def __init__ (self, drop_ratio = 1.0):
-        super(Normal_Dropout, self).__init__()
-
+        super(Dropout2d, self).__init__()
+        if drop_ratio > 1.0:
+            raise "drop_ratio smaller than 1.0"
+            
         self.drop_ratio = drop_ratio
-    
+
     def forward (self, inputs):
+        
+        if self.drop_ratio == 0.0:
+            return inputs
+        elif self.drop_ratio > 0.0 and self.drop_ratio <= 1.0:
+            outputs = nn.Dropout2d(p = self.drop_ratio)(inputs)
+            return outputs
 
-        outputs = nn.Dropout2d(p = self.drop_ratio)(inputs)
-        return outputs if self.dropout <1.0 else inputs
-
-
-class Scaling_Dropout (nn.Module): 
-    
-    def __init__(self, drop_ratio = 0.3):
-        super(Scaling_Dropout, self).__init__()
-
-        self.drop_ratio = drop_ratio
-
-    def forward(self, inputs):
-
-        outputs = (1-self.drop_ratio) * nn.Dropout2d(p = self.drop_ratio)(inputs)
-        return outputs if self.drop_ratio < 1.0 else inputs
+if __name__ == "__main__":
+    print("TEST")
+    inputs  = torch.ones(1, 3, 3, 3)
+    outputs = Dropout2d(drop_ratio = 1.1)(inputs)
+    print(outputs)
